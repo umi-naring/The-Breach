@@ -5,9 +5,6 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BehaviorTree/BehaviorTree.h"
-
 #include "AllUnitController.generated.h"
 
 /**
@@ -18,11 +15,10 @@ class AAllUnitController : public AAIController
 {
 	GENERATED_BODY()
 private:
-	UPROPERTY(EditAnywhere, Category = "AI")
-	UBehaviorTree* Behavior;
-private:
 	AAllUnitController();
+
 	virtual void OnPossess(APawn* InPawn) override;
+
 public:
 	void UnitMoveToLocation(FVector TargetLocation);
 };

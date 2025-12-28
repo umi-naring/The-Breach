@@ -10,3 +10,8 @@ ABlockGameMode::ABlockGameMode()
 	DefaultPawnClass = APlayerCamera::StaticClass();
 	PlayerControllerClass = AMyPlayerController::StaticClass();
 }
+
+float ABlockGameMode::GetCalculate(float A_Attack, float A_Penetration, float B_Defense) 
+{ 
+	return A_Attack * (1 / (1 + (B_Defense * (100 - A_Penetration / 100)))); 
+}

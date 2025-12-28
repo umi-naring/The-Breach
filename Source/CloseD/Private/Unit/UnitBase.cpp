@@ -36,6 +36,8 @@ void AUnitBase::BeginPlay()
 	Super::BeginPlay();
 	
 	PC = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
+
+	LV = 1;
 }
 
 // Called every frame
@@ -99,3 +101,20 @@ void AUnitBase::SelectedDecalVisibility(bool Visible)
 {
 	SelectedDecal->SetVisibility(Visible);
 }
+
+float AUnitBase::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCursor)
+{
+	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCursor);
+
+	if (Damage < 0)
+		return 0;
+
+	Current_HP -= Damage;
+
+	if (Current_HP <= 0)
+		this->Destroy();
+
+	return Damage;
+}
+
+float AUnitBase::GetDefense() { return Defense; }

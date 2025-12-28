@@ -15,4 +15,6 @@ class ABlockGameMode : public AGameModeBase
 	GENERATED_BODY()
 private:
 	ABlockGameMode();
+public:
+	float GetCalculate(float A_Attack, float A_Penetration, float B_Defense);
 };

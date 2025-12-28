@@ -3,3 +3,7 @@
 
 #include "Monster/Whisper.h"
 
+AWhisper::AWhisper()
+{
+	CanSkill = false;
+}

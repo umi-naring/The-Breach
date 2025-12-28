@@ -14,4 +14,6 @@ class AWhisper : public AMonsterBase
 {
 	GENERATED_BODY()
 	
+protected:
+	AWhisper();
 };
