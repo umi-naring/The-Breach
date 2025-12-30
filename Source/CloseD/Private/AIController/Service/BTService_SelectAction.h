@@ -26,8 +26,6 @@ private:
 
 	UBlackboardComponent* BBComp;
 
-	AUnitBase* TargetUnit;
-
 	ANexus* TargetNexus;
 
 	AUnitBase* NearTarget;
@@ -39,6 +37,8 @@ private:
 private:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 	void UnitDistanceArray();
+	void SelectTarget(UBehaviorTreeComponent& OwnerComp);
+
 public:
 	UBTService_SelectAction();
 };

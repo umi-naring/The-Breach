@@ -14,7 +14,8 @@ AMonsterBase::AMonsterBase()
 void AMonsterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	GetCharacterMovement()->MaxWalkSpeed = Speed;
 }
 
 // Called every frame
@@ -52,3 +53,4 @@ float AMonsterBase::TakeDamage(float DamageAmount, struct FDamageEvent const& Da
 float AMonsterBase::GetDamage() { return Attack; }
 float AMonsterBase::GetPenetration() { return Penetration; }
 float AMonsterBase::GetAttackDist() { return AttackDist; }
+float AMonsterBase::GetRecognizeDist() { return RecognizeDist; }

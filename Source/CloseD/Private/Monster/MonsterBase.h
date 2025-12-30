@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 #include "MonsterBase.generated.h"
 
 UCLASS()
@@ -35,6 +38,9 @@ protected:
 	float AttackDist;//공격 사거리
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	float RecognizeDist;//인식 사거리
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
 	float Speed;//속도
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stats")
@@ -58,4 +64,5 @@ public:
 	float GetDamage();
 	float GetPenetration();
 	float GetAttackDist();
+	float GetRecognizeDist();
 };

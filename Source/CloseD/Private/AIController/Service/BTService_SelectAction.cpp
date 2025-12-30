@@ -13,13 +13,25 @@ void UBTService_SelectAction::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
+	SelectTarget(OwnerComp);
+}
+
+void UBTService_SelectAction::SelectTarget(UBehaviorTreeComponent& OwnerComp)
+{
 	if (!IsValid(TargetNexus))
 	{
 		TArray<AActor*> EveryNexus;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ANexus::StaticClass(), EveryNexus);
 
+		if (EveryNexus.Num() <= 0)
+			return;
 		TargetNexus = Cast<ANexus>(EveryNexus[0]);
 	}
+
+	OwnerAIController = Cast<AAllAIController>(OwnerComp.GetAIOwner());
+	if (!OwnerAIController)
+		return;
+
 	AMonsterBase* OwnerMonster = Cast<AMonsterBase>(OwnerAIController->GetPawn());
 	if (!OwnerMonster)
 		return;
@@ -31,7 +43,7 @@ void UBTService_SelectAction::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	BBComp = OwnerComp.GetBlackboardComponent();
 	if (!BBComp)
 		return;
-	
+
 	if (!OwnerAIController->HasTargetUnit)
 	{
 		UnitDistanceArray();
@@ -43,10 +55,18 @@ void UBTService_SelectAction::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 			break; // 정렬 후 첫 번째
 		}
 
-		if (NearDist <= OwnerMonster->GetAttackDist())
-			BBComp->SetValueAsObject("TargetActor", TargetUnit);
+		if (NearDist <= OwnerMonster->GetRecognizeDist())
+		{
+			BBComp->SetValueAsInt("TargetUnit", 1);
+			BBComp->SetValueAsObject("TargetActor", NearTarget);
+		}
 		else
+		{
+			BBComp->SetValueAsInt("TargetUnit", 0);
+			BBComp->SetValueAsInt("TargetNexus", 1);
 			BBComp->SetValueAsObject("TargetActor", TargetNexus);
+			OwnerAIController->HasTargetUnit = false;
+		}
 	}
 }
 
@@ -79,3 +99,4 @@ void UBTService_SelectAction::UnitDistanceArray()
 		UnitDistance.Add(Unit, Distance);
 	}
 }
+
