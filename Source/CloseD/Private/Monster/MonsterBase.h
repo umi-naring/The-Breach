@@ -7,6 +7,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Animation/AnimMontage.h"
+
 #include "MonsterBase.generated.h"
 
 UCLASS()
@@ -18,6 +20,13 @@ public:
 	// Sets default values for this character's properties
 	AMonsterBase();
 
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* DeathMontage;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -60,6 +69,8 @@ public:
 		class AController* EventInstigator,
 		AActor* DamageCursor
 	) override;
+
+	void PlayAttackMontage();
 
 	float GetDamage();
 	float GetPenetration();

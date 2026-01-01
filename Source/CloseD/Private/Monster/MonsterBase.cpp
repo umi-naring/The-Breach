@@ -50,6 +50,14 @@ float AMonsterBase::TakeDamage(float DamageAmount, struct FDamageEvent const& Da
 	return Damage;
 }
 
+void AMonsterBase::PlayAttackMontage()
+{
+	if (!AttackMontage)
+		return;
+	
+	PlayAnimMontage(AttackMontage);
+}
+
 float AMonsterBase::GetDamage() { return Attack; }
 float AMonsterBase::GetPenetration() { return Penetration; }
 float AMonsterBase::GetAttackDist() { return AttackDist; }
