@@ -20,12 +20,7 @@ class AWhisper : public AMonsterBase
 {
 	GENERATED_BODY()
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-	float RunSpeed;
 
-private:
-	void SetSpeed();
-	
 protected:
 	AWhisper();
 	virtual void Tick(float DeltaTime) override;

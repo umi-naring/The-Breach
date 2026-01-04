@@ -4,8 +4,13 @@
 
 #include "CoreMinimal.h"
 
+#include "AIController/AllAIController.h"
+
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackBoardComponent.h"
 
 #include "Animation/AnimMontage.h"
 
@@ -53,9 +58,17 @@ protected:
 	float Speed;//속도
 
 	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	float RunSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
 	float EXP;//죽인 말한테 들어가는 경험치
 
 	bool CanSkill = false;
+
+public:
+	UPROPERTY(BlueprintReadOnly, Category = "Stats")
+		float NowSpeed;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -71,7 +84,9 @@ public:
 	) override;
 
 	void PlayAttackMontage();
+	void SetSpeed();
 
+	float GetSpeed();
 	float GetDamage();
 	float GetPenetration();
 	float GetAttackDist();

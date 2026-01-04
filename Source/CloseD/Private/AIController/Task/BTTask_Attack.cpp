@@ -16,7 +16,10 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	if (!Monster)
 		return EBTNodeResult::Failed;
 
-	Monster->PlayAttackMontage();
+	if(!AIOwner->IsAttacking)
+		Monster->PlayAttackMontage();
+	else
+		return EBTNodeResult::Failed;
 
 	return EBTNodeResult::Succeeded;
 }

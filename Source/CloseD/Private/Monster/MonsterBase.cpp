@@ -23,6 +23,7 @@ void AMonsterBase::Tick(float DeltaTime)
 { 
 	Super::Tick(DeltaTime);
 
+	SetSpeed();
 }
 
 // Called to bind functionality to input
@@ -58,7 +59,26 @@ void AMonsterBase::PlayAttackMontage()
 	PlayAnimMontage(AttackMontage);
 }
 
+void AMonsterBase::SetSpeed()
+{
+	AAllAIController* OwnerAIController = Cast<AAllAIController>(GetController());
+	if (!OwnerAIController)
+		return;
+
+	UBlackboardComponent* BBComp = OwnerAIController->GetBlackboardComponent();
+	if (!BBComp)
+		return;
+
+	if (BBComp->GetValueAsInt("CanAttack") == 1)
+		GetCharacterMovement()->MaxWalkSpeed = 0.f;
+	else if (BBComp->GetValueAsInt("TargetUnit") == 1)
+		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = RunSpeed;
+	else
+		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = Speed;
+}
+
 float AMonsterBase::GetDamage() { return Attack; }
+float AMonsterBase::GetSpeed() { return NowSpeed; }
 float AMonsterBase::GetPenetration() { return Penetration; }
 float AMonsterBase::GetAttackDist() { return AttackDist; }
 float AMonsterBase::GetRecognizeDist() { return RecognizeDist; }
