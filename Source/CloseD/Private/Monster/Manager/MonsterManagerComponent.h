@@ -38,6 +38,10 @@ struct FMonsterSpawnInfo
 
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float EXP;//죽인 말한테 들어가는 경험치
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float Value;//캐릭터 가치
+
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -53,7 +57,7 @@ private:
 
 private:
 	void SpawnMonster();
-	void SetMonsterInfo(AMonsterBase* SpawnMonster);
+	void SetMonsterInfo(AMonsterBase* SpawnMonster, FMonsterSpawnInfo& Info);
 
 public:	
 	// Sets default values for this component's properties
