@@ -4,14 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-
-#include "AIController/AllAIController.h"
-
 #include "BTTask_MoveToTarget.generated.h"
 
-/**
- * 
- */
+class AAllAIController;
+
 UCLASS()
 class UBTTask_MoveToTarget : public UBTTask_BlackboardBase
 {

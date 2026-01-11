@@ -3,6 +3,9 @@
 
 #include "AIController/Task/BTTask_MoveToTarget.h"
 
+#include "AIController/AllAIController.h"
+#include "Monster/MonsterBase.h"
+
 EBTNodeResult::Type UBTTask_MoveToTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	AAllAIController* OwnerAIController = Cast<AAllAIController>(OwnerComp.GetAIOwner());
@@ -22,9 +25,6 @@ EBTNodeResult::Type UBTTask_MoveToTarget::ExecuteTask(UBehaviorTreeComponent& Ow
 		return EBTNodeResult::Failed;
 
 	FVector TargetLocation = Target->GetActorLocation();
-
-	OwnerAIController->SetFocus(Target);
-
 	OwnerAIController->MoveToLocation(
 		TargetLocation,
 		Owner->GetAttackDist(),

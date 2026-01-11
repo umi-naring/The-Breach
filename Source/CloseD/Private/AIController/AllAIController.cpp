@@ -3,6 +3,12 @@
 
 #include "AIController/AllAIController.h"
 
+#include "System/BlockGameMode.h"
+
+#include "Monster/MonsterBase.h"
+#include "Unit/UnitBase.h"
+
+
 AAllAIController::AAllAIController()
 {
 	PrimaryActorTick.bCanEverTick = false;

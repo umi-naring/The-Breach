@@ -15,7 +15,7 @@ void AMonsterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetCharacterMovement()->MaxWalkSpeed = Speed;
+	GetCharacterMovement()->MaxWalkSpeed = MonsterInfo.Speed;
 }
 
 // Called every frame
@@ -40,9 +40,9 @@ float AMonsterBase::TakeDamage(float DamageAmount, struct FDamageEvent const& Da
 	if (Damage < 0)
 		return 0;
 
-	Current_HP -= Damage;
+	MonsterInfo.Current_HP -= Damage;
 
-	if (Current_HP <= 0)
+	if (MonsterInfo.Current_HP <= 0)
 	{
 		this->Destroy();
 		return Damage;
@@ -72,13 +72,8 @@ void AMonsterBase::SetSpeed()
 	if (BBComp->GetValueAsInt("CanAttack") == 1)
 		GetCharacterMovement()->MaxWalkSpeed = 0.f;
 	else if (BBComp->GetValueAsInt("TargetUnit") == 1)
-		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = RunSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.RunSpeed;
 	else
-		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = Speed;
+		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.Speed;
 }
 
-float AMonsterBase::GetDamage() { return Attack; }
-float AMonsterBase::GetSpeed() { return NowSpeed; }
-float AMonsterBase::GetPenetration() { return Penetration; }
-float AMonsterBase::GetAttackDist() { return AttackDist; }
-float AMonsterBase::GetRecognizeDist() { return RecognizeDist; }

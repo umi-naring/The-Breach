@@ -5,11 +5,6 @@
 
 #include "Unit/UnitBase.h"
 
-AAllUnitController::AAllUnitController()
-{
-	
-}
-
 void AAllUnitController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);

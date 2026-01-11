@@ -7,16 +7,12 @@
 #include "BehaviorTree/Services/BTService_BlackboardBase.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-#include "Unit/UnitBase.h"
-#include "AIController/AllAIController.h"
-
-#include "Nexus.h"
-
 #include "BTService_SelectAction.generated.h"
 
-/**
- * 
- */
+class AAllAIController;
+class ANexus;
+class AUnitBase;
+
 UCLASS()
 class UBTService_SelectAction : public UBTService_BlackboardBase
 {

@@ -3,6 +3,13 @@
 
 #include "AIController/Service/BTService_SelectAction.h"
 
+#include "Unit/UnitBase.h"
+#include "Monster/MonsterBase.h"
+
+#include "AIController/AllAIController.h"
+
+#include "Nexus.h"
+
 UBTService_SelectAction::UBTService_SelectAction()
 {
 	bNotifyBecomeRelevant = true;

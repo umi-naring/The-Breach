@@ -35,10 +35,14 @@ void UBTService_CheckAttackDistance::TickNode(UBehaviorTreeComponent& OwnerComp,
 	if (!TargetActor)
 		return;
 
+
+	OwnerAIController->SetFocus(TargetActor);
+
 	float Dist = FVector::Dist(TargetActor->GetActorLocation(), Owner->GetActorLocation());
 
 	if (Dist <= Owner->GetAttackDist())
 		BBComp->SetValueAsInt("CanAttack", 1);
 	else
 		BBComp->SetValueAsInt("CanAttack", 0);
+
 }

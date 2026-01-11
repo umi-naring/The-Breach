@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-
 #include "AllUnitController.generated.h"
 
 /**
@@ -15,8 +14,6 @@ class AAllUnitController : public AAIController
 {
 	GENERATED_BODY()
 private:
-	AAllUnitController();
-
 	virtual void OnPossess(APawn* InPawn) override;
 
 public:

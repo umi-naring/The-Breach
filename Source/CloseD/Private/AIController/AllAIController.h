@@ -10,16 +10,11 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 
-#include "Monster/MonsterBase.h"
-#include "Unit/UnitBase.h"
-
-#include "System/BlockGameMode.h"
-
 #include "AllAIController.generated.h"
 
-/**
- * 
- */
+class AMonsterBase;
+class AUnitBase;
+
 UCLASS()
 class AAllAIController : public AAIController
 {
