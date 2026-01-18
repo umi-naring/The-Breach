@@ -3,6 +3,8 @@
 
 #include "Monster/Manager/Spawner.h"
 
+#include "Monster/MonsterBase.h"
+
 // Sets default values
 ASpawner::ASpawner()
 {
@@ -15,7 +17,9 @@ ASpawner::ASpawner()
 void ASpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	GetGameMode();
+	SetMonsterManager();
 }
 
 // Called every frame
@@ -25,3 +29,29 @@ void ASpawner::Tick(float DeltaTime)
 
 }
 
+void ASpawner::SpawnMonster()
+{
+	for (auto& Elem : MonsterInfo)
+	{
+		AMonsterBase* SpawnedMonster = GetWorld()->SpawnActor<AMonsterBase>(Elem.Key, this->GetActorLocation(), FRotator::ZeroRotator);
+		SetMonsterInfo(SpawnedMonster, Elem.Value);
+	}
+}
+
+void ASpawner::SetMonsterInfo(AMonsterBase* Spawner, FMonsterSpawningInfo& Info)
+{
+	Spawner->MonsterInfo.Max_Hp = Info.Max_Hp;
+
+	Spawner->MonsterInfo.Attack = Info.Attack;
+	Spawner->MonsterInfo.Defense = Info.Defense;
+
+	Spawner->MonsterInfo.Penetration = Info.Penetration;
+
+	Spawner->MonsterInfo.AttackDist = Info.AttackDist;
+	Spawner->MonsterInfo.RecognizeDist = Info.RecognizeDist;
+
+	Spawner->MonsterInfo.Speed = Info.Speed;
+	Spawner->MonsterInfo.RunSpeed = Info.RunSpeed;
+	Spawner->MonsterInfo.EXP = Info.EXP;
+
+}

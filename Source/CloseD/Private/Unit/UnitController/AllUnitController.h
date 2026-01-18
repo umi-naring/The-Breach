@@ -13,8 +13,12 @@ UCLASS()
 class AAllUnitController : public AAIController
 {
 	GENERATED_BODY()
-private:
+
+protected:
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual void Tick(float DeltaTime) override;
+
+	void Attack();
 
 public:
 	void UnitMoveToLocation(FVector TargetLocation);

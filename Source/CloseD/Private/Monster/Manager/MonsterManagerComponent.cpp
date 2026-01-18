@@ -3,7 +3,9 @@
 
 #include "Monster/Manager/MonsterManagerComponent.h"
 
+#include "Monster/Manager/MonsterManagerComponent.h"
 #include "Monster/MonsterBase.h"
+#include "Monster/Manager/Spawner.h"
 
 // Sets default values for this component's properties
 UMonsterManagerComponent::UMonsterManagerComponent()
@@ -34,30 +36,20 @@ void UMonsterManagerComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	// ...
 }
 
-void UMonsterManagerComponent::SpawnMonster()
+void UMonsterManagerComponent::SetSpawnerInfo(ASpawner* Spawner, FMonsterSpawnInfo& Info)
 {
-	for(auto& Elem : MonsterInfo)
-	{
-		AMonsterBase* SpawnedMonster = GetWorld()->SpawnActor<AMonsterBase>(Elem.Key, GetOwner()->GetActorLocation(), FRotator::ZeroRotator);
-		SetMonsterInfo(SpawnedMonster, Elem.Value);
-	}
-}
+	Spawner->MInfo.Max_Hp = Info.Max_Hp;
 
-void UMonsterManagerComponent::SetMonsterInfo(AMonsterBase* SpawnMonster, FMonsterSpawnInfo& Info)
-{
-	SpawnMonster->MonsterInfo.Max_Hp = Info.Max_Hp;
+	Spawner->MInfo.Attack = Info.Attack;
+	Spawner->MInfo.Defense = Info.Defense;
 
-	SpawnMonster->MonsterInfo.Attack = Info.Attack;
-	SpawnMonster->MonsterInfo.Defense = Info.Defense;
+	Spawner->MInfo.Penetration = Info.Penetration;
 
-	SpawnMonster->MonsterInfo.Penetration = Info.Penetration;
+	Spawner->MInfo.AttackDist = Info.AttackDist;
+	Spawner->MInfo.RecognizeDist = Info.RecognizeDist;
 
-	SpawnMonster->MonsterInfo.AttackDist = Info.AttackDist;
-	SpawnMonster->MonsterInfo.RecognizeDist = Info.RecognizeDist;
-
-	SpawnMonster->MonsterInfo.Speed = Info.Speed;
-	SpawnMonster->MonsterInfo.RunSpeed = Info.RunSpeed;
-	SpawnMonster->MonsterInfo.EXP = Info.EXP;
-
+	Spawner->MInfo.Speed = Info.Speed;
+	Spawner->MInfo.RunSpeed = Info.RunSpeed;
+	Spawner->MInfo.EXP = Info.EXP;
 }
 

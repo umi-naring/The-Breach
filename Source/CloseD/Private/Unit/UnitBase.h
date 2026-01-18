@@ -10,10 +10,47 @@
 #include "Components/DecalComponent.h"
 #include "Components/CapsuleComponent.h"
 
+#include "Animation/AnimMontage.h"
+ 
 #include "UnitBase.generated.h"
 
+USTRUCT(BlueprintType)
+struct FUnitInfo
+{
+	GENERATED_BODY()
 
-class UDecalComponent;
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float Max_Hp;//최대 체력
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float Attack;//공격력
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float Defense;//방어력
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float Penetration;//방어력 관통
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float AttackDist;//공격 사거리
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float RecognizeDist;//인식 사거리
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float Speed;//속도
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float RunSpeed;//달리는 속도
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float EXP;//죽인 말한테 들어가는 경험치
+
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
+	float Value;//캐릭터 가치
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	float Max_EXP;//현재 레벨에서의 최대 경험치
+};
 
 UCLASS()
 class AUnitBase : public ACharacter, public ISelectableInterface
@@ -23,39 +60,15 @@ private:
 	class AMyPlayerController* PC;
 
 protected:
-
-		float LV;//현 레벨
-
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-		float Max_Hp;//최대 체력
-
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-		float Current_HP;//현재 체력
-
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-		float Attack;//공격력
-
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-		float Defense;//방어력
-
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-		float Penetration;//방어력 관통
-
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-		float Speed;//속도
-
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-		float Max_EXP;//현재 레벨에서의 최대 경험치
-
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-		float Current_EXP;//현재 경험치
-
+	float LV;//현 레벨
+	float Current_HP;
+	float Current_EXP;//현재 경험치
+	
 public:
-	// Sets default values for this character's properties
 	bool Selected;
+	FUnitInfo UInfo;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere)
@@ -63,6 +76,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UDecalComponent* SelectedDecal;//선택 했을 때 바뀌는 머테리얼
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montage")
+	UAnimMontage* DeathMontage;
+
 private:
 	virtual void NotifyActorBeginCursorOver() override;
 	virtual void NotifyActorEndCursorOver() override;

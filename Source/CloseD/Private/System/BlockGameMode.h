@@ -6,15 +6,17 @@
 #include "GameFramework/GameModeBase.h"
 #include "BlockGameMode.generated.h"
 
-/**
- * 
- */
+class UMonsterManagerComponent;
+
 UCLASS()
 class ABlockGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 private:
+	UMonsterManagerComponent* MonsterManagerComponent;
+
 	ABlockGameMode();
 public:
 	float GetCalculate(float A_Attack, float A_Penetration, float B_Defense);
+	UMonsterManagerComponent* GetMonsterManagerComponent();
 };

@@ -10,6 +10,12 @@ void AAllUnitController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 }
 
+void AAllUnitController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 void AAllUnitController::UnitMoveToLocation(FVector TargetLocation)
 {
 	AUnitBase* Unit = Cast<AUnitBase>(GetPawn());
@@ -17,4 +23,9 @@ void AAllUnitController::UnitMoveToLocation(FVector TargetLocation)
 		return;
 
 	MoveToLocation(TargetLocation);
+}
+
+void AAllUnitController::Attack()
+{
+
 }

@@ -72,10 +72,11 @@ protected:
 	bool CanSkill = false;
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
 	FMonsterInfo MonsterInfo;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Stats")
-		float NowSpeed;
+	
+	UPROPERTY(BlueprintReadWrite, Category = "Stats")
+	float NowSpeed;
 
 protected:
 	virtual void BeginPlay() override;

@@ -69,7 +69,7 @@ void AMonsterBase::SetSpeed()
 	if (!BBComp)
 		return;
 
-	if (BBComp->GetValueAsInt("CanAttack") == 1)
+	if (OwnerAIController->IsAttacking)
 		GetCharacterMovement()->MaxWalkSpeed = 0.f;
 	else if (BBComp->GetValueAsInt("TargetUnit") == 1)
 		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.RunSpeed;

@@ -3,15 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "System/BlockGameMode.h"
-#include "Spawner.generated.h"
-
-class AMonsterBase;
-class UMonsterManagerComponent;
+#include "Components/ActorComponent.h"
+#include "UnitManagerComponent.generated.h"
 
 USTRUCT(BlueprintType)
-struct FMonsterSpawningInfo
+struct FUnitSpawnInfo
 {
 	GENERATED_BODY()
 
@@ -38,43 +34,30 @@ struct FMonsterSpawningInfo
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float RunSpeed;//달리는 속도
 
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float EXP;//죽인 말한테 들어가는 경험치
+	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	float Max_EXP;//현재 레벨에서의 최대 경험치
 
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float Value;//캐릭터 가치
 
 };
 
-UCLASS()
-class ASpawner : public AActor
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class UUnitManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
-private:
-	UMonsterManagerComponent* MonsterManager;
-	ABlockGameMode* InGameMode;
-
-public:
-	FMonsterSpawningInfo MInfo;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	TMap<TSubclassOf<AMonsterBase>, FMonsterSpawningInfo> MonsterInfo;
-
-private:
-	void GetGameMode() { InGameMode = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode()); }
-	void SetMonsterManager() { MonsterManager = InGameMode->GetMonsterManagerComponent(); };
-
-	void SetMonsterInfo(AMonsterBase* Spawner, FMonsterSpawningInfo& Info);
 
 public:	
-	ASpawner();
+	// Sets default values for this component's properties
+	UUnitManagerComponent();
 
 protected:
-	// Called when the game starts or when spawned
+	// Called when the game starts
 	virtual void BeginPlay() override;
-	
+
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	void SpawnMonster();
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+		
 };

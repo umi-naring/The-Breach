@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "MonsterManagerComponent.generated.h"
 
+class ASpawner;
 class AMonsterBase;
 
 USTRUCT(BlueprintType)
@@ -44,7 +45,7 @@ struct FMonsterSpawnInfo
 
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UMonsterManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -57,9 +58,9 @@ private:
 
 private:
 	void SpawnMonster();
-	void SetMonsterInfo(AMonsterBase* SpawnMonster, FMonsterSpawnInfo& Info);
+	void SetSpawnerInfo(ASpawner* Spawner, FMonsterSpawnInfo& Info);
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UMonsterManagerComponent();
 
@@ -67,9 +68,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
 };

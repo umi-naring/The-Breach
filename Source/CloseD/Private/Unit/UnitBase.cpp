@@ -117,4 +117,4 @@ float AUnitBase::TakeDamage(float DamageAmount, struct FDamageEvent const& Damag
 	return Damage;
 }
 
-float AUnitBase::GetDefense() { return Defense; }
+float AUnitBase::GetDefense() { return UInfo.Defense; }
