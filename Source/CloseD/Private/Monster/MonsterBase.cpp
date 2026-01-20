@@ -3,17 +3,28 @@
 
 #include "Monster/MonsterBase.h"
 
+#include "System/HealthComponent.h"
+
 // Sets default values
 AMonsterBase::AMonsterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 // Called when the game starts or when spawned
 void AMonsterBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitInfo();
+}
+
+void AMonsterBase::InitInfo()
+{
+	HealthComp->SetHP(MonsterInfo.Max_Hp);
 
 	GetCharacterMovement()->MaxWalkSpeed = MonsterInfo.Speed;
 }

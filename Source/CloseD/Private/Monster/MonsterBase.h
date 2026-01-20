@@ -16,6 +16,8 @@
 
 #include "MonsterBase.generated.h"
 
+class UHealthComponent;
+
 USTRUCT(BlueprintType)
 struct FMonsterInfo
 {
@@ -68,6 +70,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Montage")
 	UAnimMontage* DeathMontage; 
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "Stats")
+	UHealthComponent* HealthComp;
+
 protected:
 	bool CanSkill = false;
 
@@ -84,6 +89,8 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void InitInfo();
 
 public:	
 	virtual float TakeDamage(
