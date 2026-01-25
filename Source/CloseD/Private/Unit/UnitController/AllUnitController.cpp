@@ -4,10 +4,13 @@
 #include "Unit/UnitController/AllUnitController.h"
 
 #include "Unit/UnitBase.h"
+#include "Monster/MonsterBase.h"
 
 void AAllUnitController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
+	OwnerUnit = Cast<AUnitBase>(GetOwner());
 }
 
 void AAllUnitController::Tick(float DeltaTime)
@@ -28,4 +31,17 @@ void AAllUnitController::UnitMoveToLocation(FVector TargetLocation)
 void AAllUnitController::Attack()
 {
 
+}
+
+void AAllUnitController::DistanceToMonster()
+{
+	UKismetSystemLibrary::SphereOverlapActors(
+		GetWorld(),
+		OwnerUnit->GetActorLocation(),
+		OwnerUnit->UInfo.AttackDist,
+		ObjectTypes,
+		AMonsterBase::StaticClass(),
+		IgnoreActors,
+		OverlapActors
+	);
 }
