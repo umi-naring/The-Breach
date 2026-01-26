@@ -40,7 +40,7 @@ void UBTService_CheckAttackDistance::TickNode(UBehaviorTreeComponent& OwnerComp,
 
 	float Dist = FVector::Dist(TargetActor->GetActorLocation(), Owner->GetActorLocation());
 
-	if (Dist <= Owner->GetAttackDist())
+	if (Dist <= Owner->GetStats(EStatsType::ATTACK_DIST))
 		BBComp->SetValueAsInt("CanAttack", 1);
 	else
 		BBComp->SetValueAsInt("CanAttack", 0);

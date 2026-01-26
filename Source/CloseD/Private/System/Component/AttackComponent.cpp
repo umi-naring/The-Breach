@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "System/HealthComponent.h"
+#include "System/Component/AttackComponent.h"
 
 // Sets default values for this component's properties
-UHealthComponent::UHealthComponent()
+UAttackComponent::UAttackComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -15,26 +15,20 @@ UHealthComponent::UHealthComponent()
 
 
 // Called when the game starts
-void UHealthComponent::BeginPlay()
+void UAttackComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OnDamaged.AddDynamic(this, &UHealthComponent::OnTakeDamage);
+	// ...
+	
 }
+
+
 // Called every frame
-void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
-void UHealthComponent::SetHP(float MaxHealth)
-{
-	Current_HP = Max_HP = MaxHealth;
-}
-
-void UHealthComponent::OnTakeDamage(float Damage)
-{
-
-}

@@ -33,12 +33,12 @@ void AAllAIController::AttackTarget(AUnitBase* HitActor)
 {
 	ABlockGameMode* GameMode = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode());
 
-	float AIAttack = Owner->GetDamage();
-	float AIPenetration = Owner->GetPenetration();
+	float AIAttack = Owner->GetStats(EStatsType::ATTACK);
+	float AIPenetration = Owner->GetStats(EStatsType::PENETRATION);
 
-	float UnitDefense = HitActor->GetDefense();
+	/*float UnitDefense = HitActor->GetStats(EStatsType::DEFENSE);*/
 
-	float Damage = GameMode->GetCalculate(AIAttack, AIPenetration, UnitDefense);
+	/*float Damage = GameMode->GetCalculate(AIAttack, AIPenetration, UnitDefense);*/
 
-	UGameplayStatics::ApplyDamage(HitActor, Damage, HitActor->GetInstigatorController(), HitActor, NULL);
+	/*UGameplayStatics::ApplyDamage(HitActor, Damage, HitActor->GetInstigatorController(), HitActor, NULL);*/
 }

@@ -3,63 +3,29 @@
 
 #include "Monster/MonsterBase.h"
 
-#include "System/HealthComponent.h"
+#include "System/Component/HealthComponent.h"
 
-// Sets default values
 AMonsterBase::AMonsterBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
-// Called when the game starts or when spawned
-void AMonsterBase::BeginPlay()
+void AMonsterBase::InitInfo(EStatsType Type, float _statValue)
 {
-	Super::BeginPlay();
-
-	InitInfo();
+	Stats.Add(Type, _statValue);
+ 
+	OnStatChanged(Type);
 }
 
-void AMonsterBase::InitInfo()
+void AMonsterBase::OnStatChanged(EStatsType Type)
 {
-	HealthComp->SetHP(MonsterInfo.Max_Hp);
-
-	GetCharacterMovement()->MaxWalkSpeed = MonsterInfo.Speed;
-}
-
-// Called every frame
-void AMonsterBase::Tick(float DeltaTime)
-{ 
-	Super::Tick(DeltaTime);
-
-	SetSpeed();
-}
-
-// Called to bind functionality to input
-void AMonsterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-float AMonsterBase::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCursor)
-{
-	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCursor);
-
-	if (Damage < 0)
-		return 0;
-
-	MonsterInfo.Current_HP -= Damage;
-
-	if (MonsterInfo.Current_HP <= 0)
-	{
-		this->Destroy();
-		return Damage;
-	}
-
-	return Damage;
+	if (EStatsType::HP == Type)
+		HealthComp->SetHP(GetStats(EStatsType::HP));
+	
+	else if (EStatsType::SPEED == Type)
+		GetCharacterMovement()->MaxWalkSpeed = GetStats(EStatsType::SPEED);
 }
 
 void AMonsterBase::PlayAttackMontage()
@@ -69,7 +35,7 @@ void AMonsterBase::PlayAttackMontage()
 	
 	PlayAnimMontage(AttackMontage);
 }
-
+//대미지 로직 사라짐
 void AMonsterBase::SetSpeed()
 {
 	AAllAIController* OwnerAIController = Cast<AAllAIController>(GetController());
@@ -82,9 +48,8 @@ void AMonsterBase::SetSpeed()
 
 	if (OwnerAIController->IsAttacking)
 		GetCharacterMovement()->MaxWalkSpeed = 0.f;
-	else if (BBComp->GetValueAsInt("TargetUnit") == 1)
-		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.RunSpeed;
-	else
-		GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.Speed;
+	//else if (BBComp->GetValueAsInt("TargetUnit") == 1)
+	//	GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.RunSpeed;
+	//else
+	//	GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.Speed;
 }
-

@@ -4,6 +4,7 @@
 #include "Monster/Manager/Spawner.h"
 
 #include "Monster/MonsterBase.h"
+#include "Monster/Manager/MonsterManagerComponent.h"
 
 // Sets default values
 ASpawner::ASpawner()
@@ -29,29 +30,61 @@ void ASpawner::Tick(float DeltaTime)
 
 }
 
-void ASpawner::SpawnMonster()
+void ASpawner::SpawnMonster(FName MonsterID)
 {
-	for (auto& Elem : MonsterInfo)
+	/*const FMonsterInfo* Data = MonsterData->GetMonsterInfo(MonsterID);
+	if (!Data) return;
+
+	AMonsterBase* Monster = GetWorld()->SpawnActor<AMonsterBase>(MonsterClass, GetActorTransform());*/
+
+	/*Monster->InitInfo(EStatsType::HP, Data->Max_Hp);
+	Monster->InitInfo(EStatsType::ATTACK, Data->Attack);
+	Monster->InitInfo(EStatsType::SPEED, Data->Speed);
+	Monster->InitInfo(EStatsType::ATTACK_DIST, Data->AttackDist);*/
+}
+
+void ASpawner::BuildWave(int WaveValue)
+{
+	/*int RemainValue = WaveValue;
+
+	TArray<FMonsterWaveUnit> Result;
+
+	for (int i = 0; i < MaxMonsterTypePerWave; ++i)
 	{
-		AMonsterBase* SpawnedMonster = GetWorld()->SpawnActor<AMonsterBase>(Elem.Key, this->GetActorLocation(), FRotator::ZeroRotator);
-		SetMonsterInfo(SpawnedMonster, Elem.Value);
-	}
+		const FMonsterInfo* Data = GetRandomMonsterData();
+		if (!Data) break;
+
+		int MaxSpawn = FMath::Min(
+			Data->MaxPerWave,
+			RemainValue / Data->Cost
+		);
+
+		if (MaxSpawn <= 0)
+			continue;
+
+		int SpawnCount = FMath::RandRange(1, MaxSpawn);
+
+		Result.Add({ Data->RowName, SpawnCount });
+		RemainValue -= SpawnCount * Data->Cost;
+
+		if (RemainValue <= 0)
+			break;
+	}*/
 }
-
-void ASpawner::SetMonsterInfo(AMonsterBase* Spawner, FMonsterSpawningInfo& Info)
-{
-	Spawner->MonsterInfo.Max_Hp = Info.Max_Hp;
-
-	Spawner->MonsterInfo.Attack = Info.Attack;
-	Spawner->MonsterInfo.Defense = Info.Defense;
-
-	Spawner->MonsterInfo.Penetration = Info.Penetration;
-
-	Spawner->MonsterInfo.AttackDist = Info.AttackDist;
-	Spawner->MonsterInfo.RecognizeDist = Info.RecognizeDist;
-
-	Spawner->MonsterInfo.Speed = Info.Speed;
-	Spawner->MonsterInfo.RunSpeed = Info.RunSpeed;
-	Spawner->MonsterInfo.EXP = Info.EXP;
-
-}
+//void ASpawner::SetMonsterInfo(AMonsterBase* Spawner, FMonsterSpawningInfo& Info)
+//{
+//	Spawner->MonsterInfo.Max_Hp = Info.Max_Hp;
+//
+//	Spawner->MonsterInfo.Attack = Info.Attack;
+//	Spawner->MonsterInfo.Defense = Info.Defense;
+//
+//	Spawner->MonsterInfo.Penetration = Info.Penetration;
+//
+//	Spawner->MonsterInfo.AttackDist = Info.AttackDist;
+//	Spawner->MonsterInfo.RecognizeDist = Info.RecognizeDist;
+//
+//	Spawner->MonsterInfo.Speed = Info.Speed;
+//	Spawner->MonsterInfo.RunSpeed = Info.RunSpeed;
+//	Spawner->MonsterInfo.EXP = Info.EXP;
+//
+//}

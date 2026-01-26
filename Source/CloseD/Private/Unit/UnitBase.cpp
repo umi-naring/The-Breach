@@ -6,6 +6,9 @@
 #include "Unit/UnitController/AllUnitController.h"
 #include "Player/MyPlayerController.h"
 
+#include "System/Component/AttackComponent.h"
+#include "System/Component/HealthComponent.h"
+
 // Sets default values
 AUnitBase::AUnitBase()
 {
@@ -28,6 +31,8 @@ AUnitBase::AUnitBase()
 	// ¹Ù´Ú¿¡ ±ò¸®°Ô È¸Àü
 	SelectedCircleDecal->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
 
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
+	AttackComponent = CreateDefaultSubobject<UAttackComponent>(TEXT("Attack"));
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +51,7 @@ void AUnitBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
 
 // Called to bind functionality to input
 void AUnitBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -117,4 +123,10 @@ float AUnitBase::TakeDamage(float DamageAmount, struct FDamageEvent const& Damag
 	return Damage;
 }
 
-float AUnitBase::GetDefense() { return UInfo.Defense; }
+//float AUnitBase::GetStats(EStatsType StatType) const
+//{
+//	if (const float* Value = Stats.Find(StatType))
+//		return *Value;
+//
+//	return 0.f;
+//}

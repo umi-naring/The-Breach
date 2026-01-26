@@ -14,6 +14,9 @@
  
 #include "UnitBase.generated.h"
 
+class UHealthComponent;
+class UAttackComponent;
+
 USTRUCT(BlueprintType)
 struct FUnitInfo
 {
@@ -43,7 +46,7 @@ struct FUnitInfo
 	float RunSpeed;//달리는 속도
 
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float EXP;//죽인 말한테 들어가는 경험치
+	float Current_EXP;//현 경험치
 
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float Value;//캐릭터 가치
@@ -60,12 +63,17 @@ private:
 	class AMyPlayerController* PC;
 
 protected:
+	UHealthComponent* HealthComponent;
+	UAttackComponent* AttackComponent;
 	float LV;//현 레벨
 	float Current_HP;
 	float Current_EXP;//현재 경험치
 	
+	TMap<EStatType, float> Stats;
+
 public:
 	bool Selected;
+
 	FUnitInfo UInfo;
 
 protected:
@@ -108,5 +116,5 @@ public:
 		AActor* DamageCursor
 	) override;
 
-	float GetDefense();
+	//float GetStats(EStatsType StatType) const;
 };

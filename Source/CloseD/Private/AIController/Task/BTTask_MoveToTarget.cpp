@@ -27,7 +27,7 @@ EBTNodeResult::Type UBTTask_MoveToTarget::ExecuteTask(UBehaviorTreeComponent& Ow
 	FVector TargetLocation = Target->GetActorLocation();
 	OwnerAIController->MoveToLocation(
 		TargetLocation,
-		Owner->GetAttackDist() - 50.f,
+		Owner->GetStats(EStatsType::ATTACK_DIST) - 50.f,
 		true,
 		true,
 		true, 

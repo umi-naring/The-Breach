@@ -62,7 +62,7 @@ void UBTService_SelectAction::SelectTarget(UBehaviorTreeComponent& OwnerComp)
 			break; // 정렬 후 첫 번째
 		}
 
-		if (NearDist <= OwnerMonster->GetRecognizeDist())
+		if (NearDist <= OwnerMonster->GetStats(EStatsType::RECOGNIZE_DIST))
 		{
 			BBComp->SetValueAsInt("TargetUnit", 1);
 			BBComp->SetValueAsObject("TargetActor", NearTarget);

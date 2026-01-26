@@ -10,42 +10,6 @@
 class AMonsterBase;
 class UMonsterManagerComponent;
 
-USTRUCT(BlueprintType)
-struct FMonsterSpawningInfo
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float Max_Hp;//최대 체력
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float Attack;//공격력
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float Defense;//방어력
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float Penetration;//방어력 관통
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float AttackDist;//공격 사거리
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float RecognizeDist;//인식 사거리
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float Speed;//속도
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float RunSpeed;//달리는 속도
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float EXP;//죽인 말한테 들어가는 경험치
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	float Value;//캐릭터 가치
-
-};
-
 UCLASS()
 class ASpawner : public AActor
 {
@@ -54,17 +18,13 @@ private:
 	UMonsterManagerComponent* MonsterManager;
 	ABlockGameMode* InGameMode;
 
-public:
-	FMonsterSpawningInfo MInfo;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Info")
-	TMap<TSubclassOf<AMonsterBase>, FMonsterSpawningInfo> MonsterInfo;
 
 private:
 	void GetGameMode() { InGameMode = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode()); }
 	void SetMonsterManager() { MonsterManager = InGameMode->GetMonsterManagerComponent(); };
+	void BuildWave(int WaveValue);
 
-	void SetMonsterInfo(AMonsterBase* Spawner, FMonsterSpawningInfo& Info);
+	//void SetMonsterInfo(AMonsterBase* Spawner, FMonsterSpawningInfo& Info);
 
 public:	
 	ASpawner();
@@ -76,5 +36,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void SpawnMonster();
+	void SpawnMonster(FName MonsterID);
 };
