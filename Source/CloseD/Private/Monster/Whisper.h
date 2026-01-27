@@ -7,9 +7,6 @@
 
 #include "AIController/AllAIController.h"
 
-#include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BlackBoardComponent.h"
-
 #include "Whisper.generated.h"
 
 /**

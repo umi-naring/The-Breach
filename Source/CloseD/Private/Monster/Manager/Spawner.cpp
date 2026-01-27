@@ -4,7 +4,6 @@
 #include "Monster/Manager/Spawner.h"
 
 #include "Monster/MonsterBase.h"
-#include "Monster/Manager/MonsterManagerComponent.h"
 
 // Sets default values
 ASpawner::ASpawner()
@@ -20,7 +19,6 @@ void ASpawner::BeginPlay()
 	Super::BeginPlay();
 
 	GetGameMode();
-	SetMonsterManager();
 }
 
 // Called every frame
@@ -43,34 +41,6 @@ void ASpawner::SpawnMonster(FName MonsterID)
 	Monster->InitInfo(EStatsType::ATTACK_DIST, Data->AttackDist);*/
 }
 
-void ASpawner::BuildWave(int WaveValue)
-{
-	/*int RemainValue = WaveValue;
-
-	TArray<FMonsterWaveUnit> Result;
-
-	for (int i = 0; i < MaxMonsterTypePerWave; ++i)
-	{
-		const FMonsterInfo* Data = GetRandomMonsterData();
-		if (!Data) break;
-
-		int MaxSpawn = FMath::Min(
-			Data->MaxPerWave,
-			RemainValue / Data->Cost
-		);
-
-		if (MaxSpawn <= 0)
-			continue;
-
-		int SpawnCount = FMath::RandRange(1, MaxSpawn);
-
-		Result.Add({ Data->RowName, SpawnCount });
-		RemainValue -= SpawnCount * Data->Cost;
-
-		if (RemainValue <= 0)
-			break;
-	}*/
-}
 //void ASpawner::SetMonsterInfo(AMonsterBase* Spawner, FMonsterSpawningInfo& Info)
 //{
 //	Spawner->MonsterInfo.Max_Hp = Info.Max_Hp;

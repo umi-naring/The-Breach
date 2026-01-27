@@ -7,9 +7,6 @@
 
 #include "Kismet/GameplayStatics.h"
 
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
-
 #include "AllAIController.generated.h"
 
 class AMonsterBase;
@@ -19,14 +16,9 @@ UCLASS()
 class AAllAIController : public AAIController
 {
 	GENERATED_BODY()
-
 protected:
-	UPROPERTY(EditAnywhere, Category = "AI")
-	UBehaviorTree* Behavior;
-
-	UBlackboardComponent* BBComp;
-
 	AMonsterBase* Owner;
+	AActor* TargetActor;
 
 public:
 	bool HasTargetUnit = false;
@@ -36,9 +28,13 @@ public:
 
 private:
 	virtual void OnPossess(APawn* InPawn) override;
+	void InitNexusTarget();
 
-	void AttackTarget(AUnitBase* HitActor);
+	//µø¿€
+	void MoveToTarget();
+	void AttackTarget();
 
 protected:
 	AAllAIController();
+
 };

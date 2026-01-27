@@ -19,26 +19,19 @@ void AAllAIController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	Owner = Cast<AMonsterBase>(GetPawn());
-
-	if (Behavior)
-		RunBehaviorTree(Behavior);
-
-	BBComp = GetBlackboardComponent();
-
-	BBComp->SetValueAsInt("TargetUnit", 0);
-	BBComp->SetValueAsInt("TargetNexus", 0);
 }
 
-void AAllAIController::AttackTarget(AUnitBase* HitActor)
+void AAllAIController::InitNexusTarget()
 {
-	ABlockGameMode* GameMode = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode());
+	TargetActor = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode())->GetNexus();
+}
 
-	float AIAttack = Owner->GetStats(EStatsType::ATTACK);
-	float AIPenetration = Owner->GetStats(EStatsType::PENETRATION);
+void AAllAIController::MoveToTarget()
+{
+	MoveToLocation(TargetActor->GetActorLocation(), Owner->GetStats(EStatsType::ATTACK_DIST));
+}
 
-	/*float UnitDefense = HitActor->GetStats(EStatsType::DEFENSE);*/
-
-	/*float Damage = GameMode->GetCalculate(AIAttack, AIPenetration, UnitDefense);*/
-
-	/*UGameplayStatics::ApplyDamage(HitActor, Damage, HitActor->GetInstigatorController(), HitActor, NULL);*/
+void AAllAIController::AttackTarget()
+{
+	Owner->PlayAttackMontage();
 }

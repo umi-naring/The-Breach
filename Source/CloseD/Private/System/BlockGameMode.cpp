@@ -5,14 +5,15 @@
 #include "Player/PlayerCamera.h"
 #include "Player/MyPlayerController.h"
 
-#include "Monster/Manager/MonsterManagerComponent.h"
+#include "Kismet/GameplayStatics.h"
+
+#include "Nexus.h"
 
 ABlockGameMode::ABlockGameMode()
 {
 	DefaultPawnClass = APlayerCamera::StaticClass();
 	PlayerControllerClass = AMyPlayerController::StaticClass();
 
-	MonsterManagerComponent = CreateDefaultSubobject<UMonsterManagerComponent>(TEXT("MonsterManager"));
 }
 
 float ABlockGameMode::GetCalculate(float A_Attack, float A_Penetration, float B_Defense) 
@@ -20,7 +21,23 @@ float ABlockGameMode::GetCalculate(float A_Attack, float A_Penetration, float B_
 	return A_Attack * (1 / (1 + (B_Defense * (100 - A_Penetration / 100)))); 
 }
 
-UMonsterManagerComponent* ABlockGameMode::GetMonsterManagerComponent()
+AActor* ABlockGameMode::GetNexus()
 {
-	return MonsterManagerComponent;
+	TArray<AActor*> Found;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ANexus::StaticClass(), Found);
+
+	if (Found.Num() == 0)
+		return nullptr;
+
+	return Found[0];
+}
+
+bool ABlockGameMode::TryConsumeWaveCost(int Cost)
+{
+	if (_remainCost < Cost)
+		return false;
+
+	_remainCost -= Cost;
+	return true;
 }

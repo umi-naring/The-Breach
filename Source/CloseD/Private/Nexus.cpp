@@ -2,13 +2,14 @@
 
 
 #include "Nexus.h"
+#include "System/Component/HealthComponent.h"
 
 // Sets default values
 ANexus::ANexus()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 }
 
 // Called when the game starts or when spawned
@@ -22,23 +23,5 @@ void ANexus::BeginPlay()
 void ANexus::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-float ANexus::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCursor)
-{
-	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCursor);
-	
-	if (Damage < 0)
-		return 0;
-
-	HP -= Damage;
-
-	if (HP <= 0)
-	{
-		this->Destroy();
-		return Damage;
-	}
-
-	return Damage;
-}

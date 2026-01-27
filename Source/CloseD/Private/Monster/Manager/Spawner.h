@@ -21,8 +21,6 @@ private:
 
 private:
 	void GetGameMode() { InGameMode = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode()); }
-	void SetMonsterManager() { MonsterManager = InGameMode->GetMonsterManagerComponent(); };
-	void BuildWave(int WaveValue);
 
 	//void SetMonsterInfo(AMonsterBase* Spawner, FMonsterSpawningInfo& Info);
 

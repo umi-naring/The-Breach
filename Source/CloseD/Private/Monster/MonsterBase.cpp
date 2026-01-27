@@ -16,16 +16,24 @@ void AMonsterBase::InitInfo(EStatsType Type, float _statValue)
 {
 	Stats.Add(Type, _statValue);
  
-	OnStatChanged(Type);
+	OnStatEvent(Type);
 }
 
-void AMonsterBase::OnStatChanged(EStatsType Type)
+void AMonsterBase::OnStatEvent(EStatsType Type)
 {
-	if (EStatsType::HP == Type)
-		HealthComp->SetHP(GetStats(EStatsType::HP));
-	
-	else if (EStatsType::SPEED == Type)
-		GetCharacterMovement()->MaxWalkSpeed = GetStats(EStatsType::SPEED);
+	switch (Type)
+	{
+		case EStatsType::HP:
+			HealthComp->SetHP(GetStats(EStatsType::HP));
+			break;
+
+		case EStatsType::SPEED:
+			GetCharacterMovement()->MaxWalkSpeed = GetStats(EStatsType::SPEED);
+			break;
+
+		default:
+			break;
+	}
 }
 
 void AMonsterBase::PlayAttackMontage()

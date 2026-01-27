@@ -6,17 +6,35 @@
 #include "GameFramework/GameModeBase.h"
 #include "BlockGameMode.generated.h"
 
-class UMonsterManagerComponent;
+class ANexus;
 
 UCLASS()
 class ABlockGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 private:
-	UMonsterManagerComponent* MonsterManagerComponent;
+	UPROPERTY(EditDefaultsOnly, Category = "Nexus")
+	TSubclassOf<ANexus> NexusClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Cost")
+	int _firstCost = 5;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Cost")
+	int _addCost = 10;
+
+	int _remainCost;
+
+public:
+	int _currentWave;
+
+private:
 	ABlockGameMode();
+
 public:
 	float GetCalculate(float A_Attack, float A_Penetration, float B_Defense);
-	UMonsterManagerComponent* GetMonsterManagerComponent();
+
+	bool TryConsumeWaveCost(int Cost);
+
+	AActor* GetNexus();
+
 };

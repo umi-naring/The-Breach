@@ -6,8 +6,21 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MonsterDataSubsystem.generated.h"
 
+class ABlockGameMode;
 class ASpawner;
 class AMonsterBase;
+
+USTRUCT(BlueprintType)
+struct FMonsterInWave
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	TSubclassOf<AMonsterBase> MonsterClass;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 Count;
+};
 
 USTRUCT(BlueprintType)
 struct FMonsterInfo : public FTableRowBase
@@ -22,6 +35,7 @@ struct FMonsterInfo : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, Category = "Info")
 	float Attack;//공격력
+
 	UPROPERTY(EditAnywhere, Category = "Info")
 	float Defense;//방어력
 
@@ -44,7 +58,10 @@ struct FMonsterInfo : public FTableRowBase
 	float EXP;//죽인 말한테 들어가는 경험치
 
 	UPROPERTY(EditAnywhere, Category = "Info")
-	float Value;//캐릭터 가치
+	int32 Cost;//캐릭터 가치
+
+	UPROPERTY(EditAnywhere)
+	int32 MaxPerWave;
 };
 
 UCLASS()
@@ -56,6 +73,22 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UDataTable* MonsterTable;
 
+	ABlockGameMode* InGameMode;
+
+protected:
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+
+	const FMonsterInfo* GetRandomMonsterData() const;
+	
+	int32 GetMaxMonsterTypeForWave(int32 WaveIndex) const;
+
+	TArray<FMonsterInWave> BuildWave(
+		int32 WaveIndex,
+		int32 WaveValue
+	) const;
+
+	const FMonsterInfo* GetRandomMonsterData(int32 RemainValue) const;
 public:
 	const FMonsterInfo* GetMonsterInfo(FName MonsterID) const
 	{

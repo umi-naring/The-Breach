@@ -9,9 +9,6 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-#include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BlackBoardComponent.h"
-
 #include "Animation/AnimMontage.h"
 
 #include "MonsterBase.generated.h"
@@ -98,7 +95,7 @@ public:/*
 	float NowSpeed;
 
 protected:
-	void OnStatChanged(EStatsType Type);
+	void OnStatEvent(EStatsType Type);
 
 public:
 	void InitInfo(EStatsType Type, float _statValue);

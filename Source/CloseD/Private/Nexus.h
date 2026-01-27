@@ -6,14 +6,14 @@
 #include "GameFramework/Actor.h"
 #include "Nexus.generated.h"
 
+class UHealthComponent;
+
 UCLASS()
 class ANexus : public AActor
 {
 	GENERATED_BODY()
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
-	float Max_HP;
-	float HP = Max_HP;
+	UHealthComponent* HealthComponent;
 
 public:	
 	// Sets default values for this actor's properties
@@ -26,11 +26,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	virtual float TakeDamage(
-		float DamageAmount,
-		struct FDamageEvent const& DamageEvent,
-		class AController* EventInstigator,
-		AActor* DamageCursor
-	) override;
 };
