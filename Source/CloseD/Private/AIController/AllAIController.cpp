@@ -19,6 +19,18 @@ void AAllAIController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	Owner = Cast<AMonsterBase>(GetPawn());
+
+	InitNexusTarget();
+}
+
+void AAllAIController::Move()
+{
+	float Distance = FVector::Dist(Owner->GetActorLocation(), TargetActor->GetActorLocation());
+
+	if (Distance <= Owner->GetStats(EStatsType::RECOGNIZE_DIST))
+	{
+		Owner->OnStatEvent(EStatsType::SPEED);
+	}
 }
 
 void AAllAIController::InitNexusTarget()

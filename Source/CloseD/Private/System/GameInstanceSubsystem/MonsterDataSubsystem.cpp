@@ -16,10 +16,7 @@ void UMonsterDataSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-TArray<FMonsterInWave> UMonsterDataSubsystem::BuildWave(
-	int32 WaveIndex,
-	int32 WaveValue
-) const
+TArray<FMonsterInWave> UMonsterDataSubsystem::BuildWave(int32 WaveIndex, int32 WaveValue) const
 {
 	int32 RemainValue = WaveValue;
 	TArray<FMonsterInWave> Result;
@@ -81,22 +78,4 @@ int32 UMonsterDataSubsystem::GetMaxMonsterTypeForWave(int32 WaveIndex) const
 		return 4;
 }
 
-//
-//void UMonsterManagerComponent::SetSpawnerInfo(ASpawner* Spawner, FMonsterSpawnInfo& Info)
-//{/*
-//	Spawner->InitInfo();*/
-//	//Spawner->MInfo.Max_Hp = Info.Max_Hp;
-//
-//	//Spawner->MInfo.Attack = Info.Attack;
-//	//Spawner->MInfo.Defense = Info.Defense;
-//
-//	//Spawner->MInfo.Penetration = Info.Penetration;
-//
-//	//Spawner->MInfo.AttackDist = Info.AttackDist;
-//	//Spawner->MInfo.RecognizeDist = Info.RecognizeDist;
-//
-//	//Spawner->MInfo.Speed = Info.Speed;
-//	//Spawner->MInfo.RunSpeed = Info.RunSpeed;
-//	//Spawner->MInfo.EXP = Info.EXP;
-//}
-//
+

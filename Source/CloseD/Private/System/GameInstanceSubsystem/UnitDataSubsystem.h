@@ -3,19 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "UnitManagerComponent.generated.h"
+#include "Subsystems/GameInstanceSubsystem.h"
+#include "UnitDataSubsystem.generated.h"
+
+class AUnitBase;
 
 USTRUCT(BlueprintType)
-struct FUnitSpawnInfo
+struct FUnitInfo : public FTableRowBase
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<AUnitBase> UnitClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float Max_Hp;//최대 체력
 
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float Attack;//공격력
+
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float Defense;//방어력
 
@@ -39,25 +45,11 @@ struct FUnitSpawnInfo
 
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float Value;//캐릭터 가치
-
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class UUnitManagerComponent : public UActorComponent
+UCLASS()
+class UUnitDataSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-
-public:	
-	// Sets default values for this component's properties
-	UUnitManagerComponent();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
+	
 };

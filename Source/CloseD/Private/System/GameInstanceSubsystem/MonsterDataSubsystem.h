@@ -83,10 +83,7 @@ protected:
 	
 	int32 GetMaxMonsterTypeForWave(int32 WaveIndex) const;
 
-	TArray<FMonsterInWave> BuildWave(
-		int32 WaveIndex,
-		int32 WaveValue
-	) const;
+	TArray<FMonsterInWave> BuildWave(int32 WaveIndex, int32 WaveValue) const;
 
 	const FMonsterInfo* GetRandomMonsterData(int32 RemainValue) const;
 public:

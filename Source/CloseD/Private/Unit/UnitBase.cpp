@@ -6,6 +6,8 @@
 #include "Unit/UnitController/AllUnitController.h"
 #include "Player/MyPlayerController.h"
 
+#include "System/GameInstanceSubsystem/UnitDataSubsystem.h"
+
 #include "System/Component/AttackComponent.h"
 #include "System/Component/HealthComponent.h"
 

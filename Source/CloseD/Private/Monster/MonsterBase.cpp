@@ -46,18 +46,12 @@ void AMonsterBase::PlayAttackMontage()
 //대미지 로직 사라짐
 void AMonsterBase::SetSpeed()
 {
-	AAllAIController* OwnerAIController = Cast<AAllAIController>(GetController());
-	if (!OwnerAIController)
-		return;
-
-	UBlackboardComponent* BBComp = OwnerAIController->GetBlackboardComponent();
-	if (!BBComp)
-		return;
-
-	if (OwnerAIController->IsAttacking)
+	if (IsAttacking)
 		GetCharacterMovement()->MaxWalkSpeed = 0.f;
-	//else if (BBComp->GetValueAsInt("TargetUnit") == 1)
-	//	GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.RunSpeed;
-	//else
-	//	GetCharacterMovement()->MaxWalkSpeed = NowSpeed = MonsterInfo.Speed;
+	else if (!IsRun)
+		GetCharacterMovement()->MaxWalkSpeed = MonsterInfo.Speed;
+	else if (IsRun)
+		GetCharacterMovement()->MaxWalkSpeed = MonsterInfo.RunSpeed;
+	else
+		return;
 }

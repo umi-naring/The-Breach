@@ -38,7 +38,7 @@ void AAllUnitController::DistanceToMonster()
 	UKismetSystemLibrary::SphereOverlapActors(
 		GetWorld(),
 		OwnerUnit->GetActorLocation(),
-		OwnerUnit->UInfo.AttackDist,
+		OwnerUnit->UnitInfo->AttackDist,
 		ObjectTypes,
 		AMonsterBase::StaticClass(),
 		IgnoreActors,

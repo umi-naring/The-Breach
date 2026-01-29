@@ -23,15 +23,14 @@ protected:
 public:
 	bool HasTargetUnit = false;
 
-	UPROPERTY(BlueprintReadWrite, Category = "State")
-	bool IsAttacking = false;
-
 private:
 	virtual void OnPossess(APawn* InPawn) override;
 	void InitNexusTarget();
 
 	//µø¿€
+	void Move();
 	void MoveToTarget();
+
 	void AttackTarget();
 
 protected:
