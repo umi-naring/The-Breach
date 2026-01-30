@@ -3,8 +3,8 @@
 
 #include "System/GameInstanceSubsystem/MonsterDataSubsystem.h"
 
-#include "Monster/Manager/Spawner.h"
-#include "Monster/MonsterBase.h"
+#include "Character/Monster/Manager/Spawner.h"
+#include "Character/Monster/MonsterBase.h"
 
 void UMonsterDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {

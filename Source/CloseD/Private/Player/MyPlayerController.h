@@ -8,7 +8,7 @@
 #include "System/SelectableInterface.h"
 #include "GameFramework/Character.h"
 
-#include "Unit/UnitBase.h"
+#include "Character/Unit/UnitBase.h"
 
 #include "MyPlayerController.generated.h"
 

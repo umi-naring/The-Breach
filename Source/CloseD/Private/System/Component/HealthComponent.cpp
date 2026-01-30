@@ -2,6 +2,7 @@
 
 
 #include "System/Component/HealthComponent.h"
+#include "Character/CharacterBase.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()

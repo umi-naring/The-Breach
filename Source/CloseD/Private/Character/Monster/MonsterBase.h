@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 
-#include "AIController/AllAIController.h"
 #include "System/GameInstanceSubsystem/MonsterDataSubsystem.h"
 
-#include "GameFramework/Character.h"
+#include "Character/CharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Animation/AnimMontage.h"
 
 #include "MonsterBase.generated.h"
 
-class UHealthComponent;
+class AAllAIController;
 
 UENUM(BlueprintType)
 enum class EStatsType :uint8
@@ -30,23 +29,13 @@ enum class EStatsType :uint8
 };
 
 UCLASS()
-class AMonsterBase : public ACharacter
+class AMonsterBase : public ACharacterBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	AMonsterBase();
-
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* AttackMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* DeathMontage; 
-
-	UPROPERTY(VisibleDefaultsOnly, Category = "Stats")
-	UHealthComponent* HealthComp;
 
 protected:
 	TMap<EStatsType, float> Stats;
@@ -68,7 +57,7 @@ public:
 	void InitInfo(EStatsType Type, float _statValue);
 	void OnStatEvent(EStatsType Type);
 
-	void PlayAttackMontage();
+	void PlayAttack();
 	void SetSpeed();
 
 	float GetStats(EStatsType Type) const

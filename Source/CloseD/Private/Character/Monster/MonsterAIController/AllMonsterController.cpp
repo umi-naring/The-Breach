@@ -1,20 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AIController/AllAIController.h"
+#include "Character/Monster/MonsterAIController/AllMonsterController.h"
 
 #include "System/BlockGameMode.h"
 
-#include "Monster/MonsterBase.h"
-#include "Unit/UnitBase.h"
+#include "Character/Monster/MonsterBase.h"
+#include "Character/Unit/UnitBase.h"
 
 
-AAllAIController::AAllAIController()
+AAllMonsterController::AAllMonsterController()
 {
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void AAllAIController::OnPossess(APawn* InPawn)
+void AAllMonsterController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
@@ -23,7 +23,7 @@ void AAllAIController::OnPossess(APawn* InPawn)
 	InitNexusTarget();
 }
 
-void AAllAIController::Move()
+void AAllMonsterController::Move()
 {
 	float Distance = FVector::Dist(Owner->GetActorLocation(), TargetActor->GetActorLocation());
 
@@ -33,17 +33,17 @@ void AAllAIController::Move()
 	}
 }
 
-void AAllAIController::InitNexusTarget()
+void AAllMonsterController::InitNexusTarget()
 {
 	TargetActor = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode())->GetNexus();
 }
 
-void AAllAIController::MoveToTarget()
+void AAllMonsterController::MoveToTarget()
 {
 	MoveToLocation(TargetActor->GetActorLocation(), Owner->GetStats(EStatsType::ATTACK_DIST));
 }
 
-void AAllAIController::AttackTarget()
+void AAllMonsterController::AttackTarget()
 {
-	Owner->PlayAttackMontage();
+	Owner->PlayAttack();
 }

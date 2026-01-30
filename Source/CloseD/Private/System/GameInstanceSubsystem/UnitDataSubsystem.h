@@ -40,7 +40,7 @@ struct FUnitInfo : public FTableRowBase
 	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float RunSpeed;//달리는 속도
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stats")
+	UPROPERTY(EditDefaultsOnly, Category = "Info")
 	float Max_EXP;//현재 레벨에서의 최대 경험치
 
 	UPROPERTY(EditDefaultsOnly, Category = "Info")

@@ -1,15 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Monster/MonsterBase.h"
+#include "Character/Monster/MonsterBase.h"
+
+#include "Character/Monster/MonsterAIController/AllMonsterController.h"
 
 #include "System/Component/HealthComponent.h"
+#include "System/Component/AttackComponent.h"
 
 AMonsterBase::AMonsterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
-	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 void AMonsterBase::InitInfo(EStatsType Type, float _statValue)
@@ -36,13 +37,11 @@ void AMonsterBase::OnStatEvent(EStatsType Type)
 	}
 }
 
-void AMonsterBase::PlayAttackMontage()
+void AMonsterBase::PlayAttack()
 {
-	if (!AttackMontage)
-		return;
-	
-	PlayAnimMontage(AttackMontage);
+	AttackComp->Attack(EAttackType::Normal);
 }
+
 //대미지 로직 사라짐
 void AMonsterBase::SetSpeed()
 {

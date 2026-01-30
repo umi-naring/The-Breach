@@ -1,15 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Unit/UnitBase.h"
+#include "Character/Unit/UnitBase.h"
 
-#include "Unit/UnitController/AllUnitController.h"
+#include "Character/Unit/UnitAIController/AllUnitController.h"
 #include "Player/MyPlayerController.h"
-
-#include "System/GameInstanceSubsystem/UnitDataSubsystem.h"
-
-#include "System/Component/AttackComponent.h"
-#include "System/Component/HealthComponent.h"
 
 // Sets default values
 AUnitBase::AUnitBase()
@@ -32,9 +27,6 @@ AUnitBase::AUnitBase()
 
 	// ¹Ù´Ú¿¡ ±ò¸®°Ô È¸Àü
 	SelectedCircleDecal->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
-
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
-	AttackComponent = CreateDefaultSubobject<UAttackComponent>(TEXT("Attack"));
 }
 
 // Called when the game starts or when spawned
@@ -108,6 +100,11 @@ void AUnitBase::NotifyActorEndCursorOver()
 void AUnitBase::SelectedDecalVisibility(bool Visible)
 {
 	SelectedDecal->SetVisibility(Visible);
+}
+
+void AUnitBase::PlayAttack()
+{
+	AttackComp->Attack(EAttackType::Normal);
 }
 
 float AUnitBase::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCursor)

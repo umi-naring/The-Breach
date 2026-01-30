@@ -3,15 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Monster/MonsterBase.h"
-
-#include "AIController/AllAIController.h"
-
+#include "Character/Monster/MonsterBase.h"
 #include "Whisper.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class AWhisper : public AMonsterBase
 {

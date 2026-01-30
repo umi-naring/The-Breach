@@ -3,22 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
+#include "Character/AllController.h"
 
 #include "Kismet/GameplayStatics.h"
 
-#include "AllAIController.generated.h"
+#include "AllMonsterController.generated.h"
 
 class AMonsterBase;
 class AUnitBase;
 
 UCLASS()
-class AAllAIController : public AAIController
+class AAllMonsterController : public AAllController
 {
 	GENERATED_BODY()
 protected:
 	AMonsterBase* Owner;
-	AActor* TargetActor;
 
 public:
 	bool HasTargetUnit = false;
@@ -34,6 +33,6 @@ private:
 	void AttackTarget();
 
 protected:
-	AAllAIController();
+	AAllMonsterController();
 
 };

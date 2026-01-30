@@ -2,6 +2,7 @@
 
 
 #include "System/Component/AttackComponent.h"
+#include "Character/CharacterBase.h"
 
 // Sets default values for this component's properties
 UAttackComponent::UAttackComponent()
@@ -20,7 +21,8 @@ void UAttackComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	Owner = Cast<ACharacterBase>(GetOwner());
+
 }
 
 
@@ -32,3 +34,42 @@ void UAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
+void UAttackComponent::Attack(EAttackType Type)
+{
+	switch (Type)
+	{
+	case EAttackType::Normal:
+		NormalAttack();
+		break;
+	case EAttackType::Skill:
+		SkillAttack();
+		break;
+	case EAttackType::Ultimate:
+		UltimateAttack();
+		break;
+	}
+}
+
+void UAttackComponent::NormalAttack()
+{
+	if (!Owner->Attack_Montage)
+		return;
+
+	Owner->PlayAnimMontage(Owner->Attack_Montage);
+}
+
+void UAttackComponent::SkillAttack()
+{
+	/*if (!Owner->Skill_Attack_Montage)
+		return;
+
+	Owner->PlayAnimMontage(Owner->Skill_Attack_Montage);*/
+}
+
+void UAttackComponent::UltimateAttack()
+{
+	/*if (!Owner->Ultimate_Attack_Montage)
+		return;
+
+	Owner->PlayAnimMontage(Owner->Ultimate_Attack_Montage);*/
+}

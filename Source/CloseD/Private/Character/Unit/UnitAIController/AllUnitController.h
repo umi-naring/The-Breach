@@ -3,19 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
+#include "Character/AllController.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "AllUnitController.generated.h"
 
 class AUnitBase;
 
 UCLASS()
-class AAllUnitController : public AAIController
+class AAllUnitController : public AAllController
 {
 	GENERATED_BODY()
 
 private:
-	AUnitBase* OwnerUnit = nullptr;
+	AUnitBase* Owner = nullptr;
 
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	TArray<AActor*> OverlapActors;
@@ -26,7 +26,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	void Attack();
-	void DistanceToMonster();
 
 public:
 	void UnitMoveToLocation(FVector TargetLocation);

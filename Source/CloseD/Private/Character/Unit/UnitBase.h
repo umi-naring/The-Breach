@@ -3,8 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Character/CharacterBase.h"
 
+#include "System/GameInstanceSubsystem/UnitDataSubsystem.h"
 #include "System/SelectableInterface.h"
 
 #include "Components/DecalComponent.h"
@@ -14,20 +15,14 @@
  
 #include "UnitBase.generated.h"
 
-class UUnitDataSubsystem;
-class UHealthComponent;
-class UAttackComponent;
-
 UCLASS()
-class AUnitBase : public ACharacter, public ISelectableInterface
+class AUnitBase : public ACharacterBase, public ISelectableInterface
 {
 	GENERATED_BODY()
 private:
 	class AMyPlayerController* PC;
 
 protected:
-	UHealthComponent* HealthComponent;
-	UAttackComponent* AttackComponent;
 	float LV;//현 레벨
 	float Current_HP;
 	float Current_EXP;//현재 경험치
@@ -48,12 +43,6 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UDecalComponent* SelectedDecal;//선택 했을 때 바뀌는 머테리얼
 
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* AttackMontage;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Montage")
-	UAnimMontage* DeathMontage;
-
 private:
 	virtual void NotifyActorBeginCursorOver() override;
 	virtual void NotifyActorEndCursorOver() override;
@@ -66,10 +55,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Move
 	void TakeMove(FVector SendLocation);//컨트롤러한테 움직이게 하라고 명령하는 함수
 
 	void SelectedCircleDecalVisibility(bool DragSelected);// 선택 데칼
 	void SelectedDecalVisibility(bool Visible);// 선택 될 캐릭터를 보여주는 데칼
+
+	// Attack
+	void PlayAttack();
 
 	// 대미지 입는 함수
 	virtual float TakeDamage(

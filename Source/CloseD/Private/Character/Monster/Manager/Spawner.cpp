@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Monster/Manager/Spawner.h"
+#include "Character/Monster/Manager/Spawner.h"
 
-#include "Monster/MonsterBase.h"
+#include "Character/Monster/MonsterBase.h"
 
 // Sets default values
 ASpawner::ASpawner()

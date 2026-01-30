@@ -9,6 +9,8 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamaged, float, Damage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDead);
 
+class ACharacterBase;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UHealthComponent : public UActorComponent
 {
@@ -18,9 +20,9 @@ protected:
 	float Max_HP;
 	float Current_HP;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable)
 	FOnDamaged OnDamaged;
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable)
 	FOnDead OnDead;
 
 public:	

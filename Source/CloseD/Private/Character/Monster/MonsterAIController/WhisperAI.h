@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController/AllAIController.h"
+#include "Character/Monster/MonsterAIController/AllMonsterController.h"
 #include "WhisperAI.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AWhisperAI : public AAllAIController
+class AWhisperAI : public AAllMonsterController
 {
 	GENERATED_BODY()
 	

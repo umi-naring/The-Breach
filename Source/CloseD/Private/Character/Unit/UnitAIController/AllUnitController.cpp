@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Unit/UnitController/AllUnitController.h"
+#include "Character/Unit/UnitAIController/AllUnitController.h"
 
-#include "Unit/UnitBase.h"
-#include "Monster/MonsterBase.h"
+#include "Character/Unit/UnitBase.h"
+#include "Character/Monster/MonsterBase.h"
 
 void AAllUnitController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	OwnerUnit = Cast<AUnitBase>(GetOwner());
+	Owner = Cast<AUnitBase>(GetOwner());
 }
 
 void AAllUnitController::Tick(float DeltaTime)
@@ -30,18 +30,5 @@ void AAllUnitController::UnitMoveToLocation(FVector TargetLocation)
 
 void AAllUnitController::Attack()
 {
-
-}
-
-void AAllUnitController::DistanceToMonster()
-{
-	UKismetSystemLibrary::SphereOverlapActors(
-		GetWorld(),
-		OwnerUnit->GetActorLocation(),
-		OwnerUnit->UnitInfo->AttackDist,
-		ObjectTypes,
-		AMonsterBase::StaticClass(),
-		IgnoreActors,
-		OverlapActors
-	);
+	Owner->PlayAttack();
 }
