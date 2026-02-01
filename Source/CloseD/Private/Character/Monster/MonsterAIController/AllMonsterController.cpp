@@ -5,10 +5,6 @@
 
 #include "System/BlockGameMode.h"
 
-#include "Character/Monster/MonsterBase.h"
-#include "Character/Unit/UnitBase.h"
-
-
 AAllMonsterController::AAllMonsterController()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -18,32 +14,41 @@ void AAllMonsterController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
+	InitSetting();
+}
+
+void AAllMonsterController::InitSetting()
+{
 	Owner = Cast<AMonsterBase>(GetPawn());
 
-	InitNexusTarget();
+	AActor* Nexus = Cast<ABlockGameMode>(
+		GetWorld()->GetAuthGameMode()
+	)->GetNexus();
+
+	Owner->RequestSetTarget(Nexus);
 }
 
-void AAllMonsterController::Move()
+void AAllMonsterController::RequestMoveToTarget(AActor* InTarget)
 {
-	float Distance = FVector::Dist(Owner->GetActorLocation(), TargetActor->GetActorLocation());
+	if (!InTarget || !Owner) return;
 
-	if (Distance <= Owner->GetStats(EStatsType::RECOGNIZE_DIST))
+	ExecuteMove(InTarget);
+}
+
+void AAllMonsterController::ExecuteMove(AActor* Target)
+{
+	if (Owner->GetStats(EStatsType::ATTACK_DIST) <= 0)
 	{
-		Owner->OnStatEvent(EStatsType::SPEED);
+		MoveToActor(
+			Target,
+			30.f
+		);
 	}
-}
-
-void AAllMonsterController::InitNexusTarget()
-{
-	TargetActor = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode())->GetNexus();
-}
-
-void AAllMonsterController::MoveToTarget()
-{
-	MoveToLocation(TargetActor->GetActorLocation(), Owner->GetStats(EStatsType::ATTACK_DIST));
-}
-
-void AAllMonsterController::AttackTarget()
-{
-	Owner->PlayAttack();
+	else
+	{
+		MoveToActor(
+			Target,
+			Owner->GetStats(EStatsType::ATTACK_DIST)
+		);
+	}
 }

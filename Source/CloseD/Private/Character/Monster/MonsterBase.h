@@ -13,7 +13,8 @@
 
 #include "MonsterBase.generated.h"
 
-class AAllAIController;
+class AAllMonsterController;
+class AUnitBase;
 
 UENUM(BlueprintType)
 enum class EStatsType :uint8
@@ -38,7 +39,16 @@ public:
 	AMonsterBase();
 
 protected:
+	FTimerHandle MovementStateTimer;
+
+	AAllMonsterController* Controller = nullptr;
+
 	TMap<EStatsType, float> Stats;
+
+	AActor* CurrentTarget;
+	AActor* NexusTarget;
+
+	TSet<AUnitBase*> OverlappingUnits;
 
 public:
 	FMonsterInfo MonsterInfo;
@@ -53,12 +63,33 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Stats")
 	float NowSpeed;
 
+protected:
+	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	//Move
+	void InitMovementState();
+	void UpdateMovementState();
+
+	//Recognize
+	void OnUnitBeginOverlap(AActor* OtherActor);
+	void OnUnitEndOverlap(AActor* OtherActor);
+	void OnTargetUnitDead();
+
+	bool CanChangeTarget(AActor* NewTarget) const;
+	void SetTarget_Internal(AActor* NewTarget);
+
+
 public:
 	void InitInfo(EStatsType Type, float _statValue);
 	void OnStatEvent(EStatsType Type);
 
 	void PlayAttack();
+	UFUNCTION(BlueprintCallable)
+	void OnAttackFinished();
+
 	void SetSpeed();
+	void RequestSetTarget(AActor* NewTarget);
 
 	float GetStats(EStatsType Type) const
 	{
@@ -67,4 +98,6 @@ public:
 
 		return 0.f;
 	}
+
+	AActor* GetCurrentTarget() { return CurrentTarget; }
 };

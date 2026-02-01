@@ -7,10 +7,10 @@
 
 #include "Kismet/GameplayStatics.h"
 
-#include "AllMonsterController.generated.h"
+#include "Character/Monster/MonsterBase.h"
+#include "Character/Unit/UnitBase.h"
 
-class AMonsterBase;
-class AUnitBase;
+#include "AllMonsterController.generated.h"
 
 UCLASS()
 class AAllMonsterController : public AAllController
@@ -24,15 +24,38 @@ public:
 
 private:
 	virtual void OnPossess(APawn* InPawn) override;
-	void InitNexusTarget();
+
+	void InitSetting();
 
 	//µ¿ÀÛ
-	void Move();
-	void MoveToTarget();
-
-	void AttackTarget();
+	void ExecuteMove(AActor* Target);
 
 protected:
 	AAllMonsterController();
 
+public:
+	void RequestMoveToTarget(AActor* InTarget);
+
+	bool IsInAttackRange() const
+	{
+		if (!Owner || !Owner->GetCurrentTarget())
+			return false;
+
+		const float AttackRange = Owner->GetStats(EStatsType::ATTACK_DIST);
+
+		return FVector::DistSquared(
+			Owner->GetActorLocation(),
+			Owner->GetCurrentTarget()->GetActorLocation()
+		) <= FMath::Square(AttackRange);
+	}
+
+	bool IsInRecognizeRange(AActor* Target) const
+	{
+		if (!Owner || !Target) return false;
+
+		return FVector::DistSquared(
+			Owner->GetActorLocation(),
+			Target->GetActorLocation()
+		) <= FMath::Square(Owner->GetStats(EStatsType::RECOGNIZE_DIST));
+	}
 };

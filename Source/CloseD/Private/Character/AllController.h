@@ -12,7 +12,5 @@ UCLASS()
 class AAllController : public AAIController
 {
 	GENERATED_BODY()
-	
-protected:
-	AActor* TargetActor;
+
 };
