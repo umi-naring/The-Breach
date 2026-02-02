@@ -40,8 +40,14 @@ void AMonsterBase::PossessedBy(AController* NewController)
 
 	SetTarget_Internal(NexusTarget);
 
-	if (Controller)
-		Controller->RequestMoveToTarget(CurrentTarget);
+	FTimerHandle DelayMove;
+
+	//임시(나중에는 스포너에서 호출 예정), 디버그 모드로 놓을 예정
+	GetWorld()->GetTimerManager().SetTimer(DelayMove, [this]() {
+		if (Controller)
+			Controller->RequestMoveToTarget(CurrentTarget);
+		}, 0.5f, false);
+	
 }
 
 void AMonsterBase::InitInfo(EStatsType Type, float _statValue)
@@ -175,7 +181,8 @@ void AMonsterBase::SetTarget_Internal(AActor* NewTarget)
 
 void AMonsterBase::UpdateMovementState()
 {
-	if (!Controller || !CurrentTarget) return;
+	if (!Controller || !CurrentTarget)
+		return;
 
 	bool bShouldRun = Controller->IsInRecognizeRange(CurrentTarget);
 

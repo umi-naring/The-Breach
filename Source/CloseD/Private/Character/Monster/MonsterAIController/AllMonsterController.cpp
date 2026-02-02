@@ -38,17 +38,13 @@ void AAllMonsterController::RequestMoveToTarget(AActor* InTarget)
 void AAllMonsterController::ExecuteMove(AActor* Target)
 {
 	if (Owner->GetStats(EStatsType::ATTACK_DIST) <= 0)
-	{
 		MoveToActor(
-			Target,
+			Target, 
 			30.f
 		);
-	}
 	else
-	{
 		MoveToActor(
 			Target,
 			Owner->GetStats(EStatsType::ATTACK_DIST)
 		);
-	}
 }

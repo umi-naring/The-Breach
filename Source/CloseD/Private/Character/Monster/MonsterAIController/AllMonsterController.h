@@ -51,7 +51,8 @@ public:
 
 	bool IsInRecognizeRange(AActor* Target) const
 	{
-		if (!Owner || !Target) return false;
+		if (!Owner || !Target) 
+			return false;
 
 		return FVector::DistSquared(
 			Owner->GetActorLocation(),
