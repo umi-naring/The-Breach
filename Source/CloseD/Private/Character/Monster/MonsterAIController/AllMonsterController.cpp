@@ -7,7 +7,7 @@
 
 AAllMonsterController::AAllMonsterController()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AAllMonsterController::OnPossess(APawn* InPawn)
@@ -15,6 +15,17 @@ void AAllMonsterController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	InitSetting();
+}
+
+void AAllMonsterController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (!Owner || Owner->IsAttacking || Owner->IsAttackMontagePlaying())
+		return;
+
+	if (IsInAttackRange())
+		Owner->PlayAttack();
 }
 
 void AAllMonsterController::InitSetting()

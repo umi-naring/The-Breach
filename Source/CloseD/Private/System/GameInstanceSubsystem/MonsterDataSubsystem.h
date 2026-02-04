@@ -16,6 +16,9 @@ struct FMonsterInWave
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly)
+	FName MonsterID;
+
+	UPROPERTY(BlueprintReadOnly)
 	TSubclassOf<AMonsterBase> MonsterClass;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -64,14 +67,17 @@ struct FMonsterInfo : public FTableRowBase
 	int32 MaxPerWave;
 };
 
-UCLASS()
+UCLASS(Config=Game, DefaultConfig)
 class UMonsterDataSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	UDataTable* MonsterTable;
+	UPROPERTY(EditDefaultsOnly, Config)
+	TSoftObjectPtr<UDataTable> MonsterTable;
+
+	UPROPERTY(Transient)
+	UDataTable* LoadedMonsterTable = nullptr;
 
 	ABlockGameMode* InGameMode;
 
@@ -85,10 +91,17 @@ protected:
 
 	TArray<FMonsterInWave> BuildWave(int32 WaveIndex, int32 WaveValue) const;
 
-	const FMonsterInfo* GetRandomMonsterData(int32 RemainValue) const;
+	const FMonsterInfo* GetRandomMonsterData(int32 RemainValue, FName& OutMonsterID) const;
 public:
 	const FMonsterInfo* GetMonsterInfo(FName MonsterID) const
 	{
-		return MonsterTable->FindRow<FMonsterInfo>(MonsterID, TEXT("MonsterData"));
+		return LoadedMonsterTable
+			? LoadedMonsterTable->FindRow<FMonsterInfo>(MonsterID, TEXT("MonsterData"))
+			: nullptr;
+	}
+
+	TArray<FMonsterInWave> BuildWaveData(int32 WaveIndex, int32 WaveValue) const
+	{
+		return BuildWave(WaveIndex, WaveValue);
 	}
 };

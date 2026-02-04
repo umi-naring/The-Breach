@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Animation/AnimMontage.h"
+#include "Components/SphereComponent.h"
 
 #include "MonsterBase.generated.h"
 
@@ -50,6 +51,9 @@ protected:
 
 	TSet<AUnitBase*> OverlappingUnits;
 
+	UPROPERTY(VisibleAnywhere, Category = "Recognize")
+	USphereComponent* RecognizeSphere;
+
 public:
 	FMonsterInfo MonsterInfo;
 
@@ -76,9 +80,20 @@ protected:
 	void OnUnitEndOverlap(AActor* OtherActor);
 	void OnTargetUnitDead();
 
+	UFUNCTION()
+	void OnRecognizeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnRecognizeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	bool CanChangeTarget(AActor* NewTarget) const;
 	void SetTarget_Internal(AActor* NewTarget);
 
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	AUnitBase* GetClosestOverlappingUnit() const;
 
 public:
 	void InitInfo(EStatsType Type, float _statValue);
@@ -100,4 +115,7 @@ public:
 	}
 
 	AActor* GetCurrentTarget() { return CurrentTarget; }
+
+public:
+	bool IsAttackMontagePlaying() const;
 };

@@ -9,6 +9,10 @@
 void UMonsterDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+
+	LoadedMonsterTable = MonsterTable.IsNull()
+		? nullptr
+		: MonsterTable.LoadSynchronous();
 }
 
 void UMonsterDataSubsystem::Deinitialize()
@@ -25,7 +29,8 @@ TArray<FMonsterInWave> UMonsterDataSubsystem::BuildWave(int32 WaveIndex, int32 W
 
 	for (int i = 0; i < MaxTypes; ++i)
 	{
-		const FMonsterInfo* Data = GetRandomMonsterData(RemainValue);
+		FName MonsterID;
+		const FMonsterInfo* Data = GetRandomMonsterData(RemainValue, MonsterID);
 		if (!Data)
 			break;
 
@@ -39,7 +44,7 @@ TArray<FMonsterInWave> UMonsterDataSubsystem::BuildWave(int32 WaveIndex, int32 W
 
 		int32 SpawnCount = FMath::RandRange(1, MaxSpawn);
 
-		Result.Add({ Data->MonsterClass, SpawnCount });
+		Result.Add({ MonsterID, Data->MonsterClass, SpawnCount });
 		RemainValue -= SpawnCount * Data->Cost;
 
 		if (RemainValue <= 0)
@@ -49,19 +54,20 @@ TArray<FMonsterInWave> UMonsterDataSubsystem::BuildWave(int32 WaveIndex, int32 W
 	return Result;
 }
 
-const FMonsterInfo* UMonsterDataSubsystem::GetRandomMonsterData(int32 RemainValue) const
+const FMonsterInfo* UMonsterDataSubsystem::GetRandomMonsterData(int32 RemainValue, FName& OutMonsterID) const
 {
-	if (MonsterTable == nullptr)
+	if (LoadedMonsterTable == nullptr)
 		return nullptr;
 
-	TArray<FName> RowNames = MonsterTable->GetRowNames();
+	TArray<FName> RowNames = LoadedMonsterTable->GetRowNames();
 	if (RowNames.Num() == 0)
 		return nullptr;
 
 	int Index = FMath::RandRange(0, RowNames.Num() - 1);
+	OutMonsterID = RowNames[Index];
 
-	return MonsterTable->FindRow<FMonsterInfo>(
-		RowNames[Index],
+	return LoadedMonsterTable->FindRow<FMonsterInfo>(
+		OutMonsterID,
 		TEXT("GetRandomMonsterData")
 	);
 }
@@ -77,5 +83,8 @@ int32 UMonsterDataSubsystem::GetMaxMonsterTypeForWave(int32 WaveIndex) const
 	else 
 		return 4;
 }
+
+
+
 
 
