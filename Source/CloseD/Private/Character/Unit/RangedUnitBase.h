@@ -3,14 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
-#include "AllController.generated.h"
-
-class ACharacterBase;
+#include "Character/Unit/UnitBase.h"
+#include "RangedUnitBase.generated.h"
 
 UCLASS()
-class CLOSED_API AAllController : public AAIController
+class CLOSED_API ARangedUnitBase : public AUnitBase
 {
 	GENERATED_BODY()
-
 };

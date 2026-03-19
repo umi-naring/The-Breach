@@ -6,6 +6,7 @@
 #include "Character/AllController.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
 
 #include "Character/Monster/MonsterBase.h"
 #include "Character/Unit/UnitBase.h"
@@ -16,6 +17,9 @@ UCLASS()
 class AAllMonsterController : public AAllController
 {
 	GENERATED_BODY()
+private:
+	FTimerHandle AttackCheckTimer;
+
 protected:
 	AMonsterBase* Owner;
 
@@ -29,6 +33,8 @@ private:
 
 	//동작
 	void ExecuteMove(AActor* Target);
+
+	void AttackCheck();
 
 private:
 	float GetEffectiveRange(const AActor* Target) const
@@ -56,9 +62,10 @@ public:
 		if (!Owner || !Owner->GetCurrentTarget())
 			return false;
 
-		const float AttackRange = Owner->GetStats(EStatsType::ATTACK_DIST);
-		const float EffectiveRange = AttackRange + GetEffectiveRange(Owner->GetCurrentTarget());
+		const float AttackRange = Owner->GetStats(EStatsType::ATTACK_DIST);// 공격 범위
+		const float EffectiveRange = AttackRange + GetEffectiveRange(Owner->GetCurrentTarget());// 유효 범위 = 공격 범위 + 몬스터와 타겟의 크기를 고려한 추가 범위
 
+		// 2D 거리 계산 (Z축은 무시)
 		return FVector::DistSquared2D(
 			Owner->GetActorLocation(),
 			Owner->GetCurrentTarget()->GetActorLocation()

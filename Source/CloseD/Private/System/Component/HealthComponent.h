@@ -42,4 +42,7 @@ public:
 
 	UFUNCTION()
 	void OnTakeDamage(float Damage);
+
+	FOnDead& OnDeadEvent() { return OnDead; }
+	FOnDamaged& OnDamagedEvent() { return OnDamaged; }
 };

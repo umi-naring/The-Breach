@@ -7,7 +7,7 @@
 
 AAllMonsterController::AAllMonsterController()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void AAllMonsterController::OnPossess(APawn* InPawn)
@@ -15,17 +15,20 @@ void AAllMonsterController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	InitSetting();
+
+	// 공격 체크 타이머 시작
+	GetWorldTimerManager().SetTimer(
+		AttackCheckTimer,
+		this,
+		&AAllMonsterController::AttackCheck,
+		0.2f,   // 0.2~0.3초면 충분
+		true
+	);
 }
 
 void AAllMonsterController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (!Owner || Owner->IsAttacking || Owner->IsAttackMontagePlaying())
-		return;
-
-	if (IsInAttackRange())
-		Owner->PlayAttack();
 }
 
 void AAllMonsterController::InitSetting()
@@ -58,4 +61,31 @@ void AAllMonsterController::ExecuteMove(AActor* Target)
 			Target,
 			Owner->GetStats(EStatsType::ATTACK_DIST)
 		);
+}
+
+void AAllMonsterController::AttackCheck()
+{
+	if (!Owner)
+		return;
+
+	if (Owner->IsAttacking)//몬스터가 공격 중일 경우
+	{
+		// 공격 범위를 벗어나면 공격 중지 후 이동
+		if (!IsInAttackRange())
+		{
+			Owner->StopAttack();
+			if (Owner->GetCurrentTarget())
+				RequestMoveToTarget(Owner->GetCurrentTarget());
+		}
+		return;
+	}	
+	
+	if (Owner->IsAttackMontagePlaying())
+		return;
+
+	// 공격 범위 내에 타겟이 있으면 공격, 없으면 이동
+	if (IsInAttackRange())
+	{
+		Owner->PlayAttack();
+	}
 }

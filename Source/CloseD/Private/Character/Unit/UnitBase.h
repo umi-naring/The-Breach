@@ -15,27 +15,34 @@
  
 #include "UnitBase.generated.h"
 
+class AMonsterBase;
+class AAllUnitController;
+
 UCLASS()
-class AUnitBase : public ACharacterBase, public ISelectableInterface
+class CLOSED_API AUnitBase : public ACharacterBase, public ISelectableInterface
 {
 	GENERATED_BODY()
 private:
 	class AMyPlayerController* PC;
 
 protected:
-	float LV;//현 레벨
 	float Current_HP;
 	float Current_EXP;//현재 경험치
 	
 	TMap<EStatType, float> Stats;
+	AAllUnitController* UnitController;
 
 public:
 	bool Selected;
 
 	FUnitInfo* UnitInfo;
 
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	bool IsAttacking = false;
+
 protected:
 	virtual void BeginPlay() override;
+	void InitAttackSphere();
 
 	UPROPERTY(VisibleAnywhere)
 	UDecalComponent* SelectedCircleDecal;//선택 했을 때 바닥에 뜨는 원
@@ -47,13 +54,14 @@ private:
 	virtual void NotifyActorBeginCursorOver() override;
 	virtual void NotifyActorEndCursorOver() override;
 
+private:
+	void SetDecal();
+	void InitController();
+
 public:	
 	AUnitBase();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Move
 	void TakeMove(FVector SendLocation);//컨트롤러한테 움직이게 하라고 명령하는 함수
@@ -63,14 +71,19 @@ public:
 
 	// Attack
 	void PlayAttack();
+	void StopAttack();
+	bool IsAttackMontagePlaying() const;
 
-	// 대미지 입는 함수
-	virtual float TakeDamage(
-		float DamageAmount, 
-		struct FDamageEvent const& DamageEvent,
-		class AController* EventInstigator,
-		AActor* DamageCursor
-	) override;
+	float GetAttackRange() const
+	{
+		return UnitInfo ? UnitInfo->AttackDist : 0.f;
+	}
 
-	//float GetStats(EStatsType StatType) const;
+	float GetAttackPower() const
+	{
+		return UnitInfo ? UnitInfo->Attack : 0.f;
+	}
+
+private:
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 };

@@ -3,20 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "System/GameInstanceSubsystem/MonsterDataSubsystem.h"
-
 #include "Character/CharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "System/GameInstanceSubsystem/MonsterDataSubsystem.h"
 
 #include "Animation/AnimMontage.h"
-#include "Components/SphereComponent.h"
 
 #include "MonsterBase.generated.h"
 
+// System
+class ABlockGameMode;
+
+// Monster
 class AAllMonsterController;
+
+// Unit
 class AUnitBase;
 
+// 몬스터 스탯 종류
 UENUM(BlueprintType)
 enum class EStatsType :uint8
 {
@@ -27,7 +31,8 @@ enum class EStatsType :uint8
 	ATTACK_DIST,
 	RECOGNIZE_DIST,
 	SPEED,
-	RUNSPEED
+	RUNSPEED,
+	Value
 };
 
 UCLASS()
@@ -40,6 +45,8 @@ public:
 	AMonsterBase();
 
 protected:
+	ABlockGameMode* GM;
+
 	FTimerHandle MovementStateTimer;
 
 	AAllMonsterController* Controller = nullptr;
@@ -50,9 +57,6 @@ protected:
 	AActor* NexusTarget;
 
 	TSet<AUnitBase*> OverlappingUnits;
-
-	UPROPERTY(VisibleAnywhere, Category = "Recognize")
-	USphereComponent* RecognizeSphere;
 
 public:
 	FMonsterInfo MonsterInfo;
@@ -76,17 +80,10 @@ protected:
 	void UpdateMovementState();
 
 	//Recognize
+	void InitAttackSphere();
 	void OnUnitBeginOverlap(AActor* OtherActor);
 	void OnUnitEndOverlap(AActor* OtherActor);
 	void OnTargetUnitDead();
-
-	UFUNCTION()
-	void OnRecognizeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	void OnRecognizeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	bool CanChangeTarget(AActor* NewTarget) const;
 	void SetTarget_Internal(AActor* NewTarget);
@@ -100,6 +97,7 @@ public:
 	void OnStatEvent(EStatsType Type);
 
 	void PlayAttack();
+	void StopAttack();
 	UFUNCTION(BlueprintCallable)
 	void OnAttackFinished();
 
@@ -118,4 +116,9 @@ public:
 
 public:
 	bool IsAttackMontagePlaying() const;
+
+	float GetAttackPower() const
+	{
+		return GetStats(EStatsType::ATTACK);
+	}
 };

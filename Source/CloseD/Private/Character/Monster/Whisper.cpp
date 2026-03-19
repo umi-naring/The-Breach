@@ -5,7 +5,7 @@
 
 AWhisper::AWhisper()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	CanSkill = false;
 }
 

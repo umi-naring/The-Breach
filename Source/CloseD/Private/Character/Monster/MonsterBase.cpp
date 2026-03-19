@@ -5,9 +5,11 @@
 
 #include "Character/Monster/MonsterAIController/AllMonsterController.h"
 
+#include "System/BlockGameMode.h"
+#include "System/GameInstanceSubsystem/MonsterDataSubsystem.h"
+
 #include "System/Component/HealthComponent.h"
 #include "System/Component/AttackComponent.h"
-#include "System/BlockGameMode.h"
 
 #include "Character/Unit/UnitBase.h"
 
@@ -15,13 +17,7 @@ AMonsterBase::AMonsterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	RecognizeSphere = CreateDefaultSubobject<USphereComponent>(TEXT("RecognizeSphere"));
-	RecognizeSphere->SetupAttachment(RootComponent);
-	RecognizeSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	RecognizeSphere->SetCollisionObjectType(ECC_WorldDynamic);
-	RecognizeSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
-	RecognizeSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	RecognizeSphere->SetSphereRadius(0.f);
+
 }
 
 void AMonsterBase::BeginPlay()
@@ -31,15 +27,12 @@ void AMonsterBase::BeginPlay()
 	bUseControllerRotationYaw = true;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
-	if (ABlockGameMode* GM = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode()))
+	GM = Cast<ABlockGameMode>(GetWorld()->GetAuthGameMode());
+
+	if (GM)
 		NexusTarget = GM->GetNexus();
 
-	if (RecognizeSphere)
-	{
-		RecognizeSphere->OnComponentBeginOverlap.AddDynamic(this, &AMonsterBase::OnRecognizeBeginOverlap);
-		RecognizeSphere->OnComponentEndOverlap.AddDynamic(this, &AMonsterBase::OnRecognizeEndOverlap);
-	}
-
+	InitAttackSphere();
 	InitMovementState();
 }
 
@@ -52,6 +45,12 @@ void AMonsterBase::InitMovementState()
 		0.2f,   // 0.2~0.3초면 충분
 		true
 	);
+}
+
+void AMonsterBase::InitAttackSphere()
+{
+	if (AttackSphere)
+		AttackSphere->SetSphereRadius(GetStats(EStatsType::ATTACK_DIST));
 }
 
 void AMonsterBase::PossessedBy(AController* NewController)
@@ -91,9 +90,9 @@ void AMonsterBase::OnStatEvent(EStatsType Type)
 			SetSpeed();
 			break;
 
-		case EStatsType::RECOGNIZE_DIST:
-			if (RecognizeSphere)
-				RecognizeSphere->SetSphereRadius(GetStats(EStatsType::RECOGNIZE_DIST));
+		case EStatsType::ATTACK_DIST:
+			if (AttackSphere)
+				AttackSphere->SetSphereRadius(GetStats(EStatsType::ATTACK_DIST));
 			break;
 
 		default:
@@ -103,31 +102,44 @@ void AMonsterBase::OnStatEvent(EStatsType Type)
 
 void AMonsterBase::PlayAttack()
 {
-	if (!Attack_Montage)
-	{
-		IsAttacking = false;
-		SetSpeed();
-		return;
-	}
+    if (!Attack_Montage)
+    {
+        IsAttacking = false;
+        SetSpeed();
+        return;
+    }
 
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (!AnimInstance)
-		return;
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    if (!AnimInstance)
+        return;
 
-	if (AnimInstance->Montage_IsPlaying(Attack_Montage))
-		return;
+    if (AnimInstance->Montage_IsPlaying(Attack_Montage))
+        return;
 
-	IsAttacking = true;
-	SetSpeed();
+    IsAttacking = true;
+    SetSpeed();
 
-	if (Controller)
-		Controller->StopMovement();
+    if (Controller)
+        Controller->StopMovement();
 
-	FOnMontageEnded EndDelegate;
-	EndDelegate.BindUObject(this, &AMonsterBase::OnAttackMontageEnded);
-	AnimInstance->Montage_SetEndDelegate(EndDelegate, Attack_Montage);
+    FOnMontageEnded EndDelegate;
+    EndDelegate.BindUObject(this, &AMonsterBase::OnAttackMontageEnded);
+    AnimInstance->Montage_SetEndDelegate(EndDelegate, Attack_Montage);
 
-	AttackComp->Attack(EAttackType::Normal);
+    AttackComp->Attack(EAttackType::Normal);
+}
+
+void AMonsterBase::StopAttack()
+{
+    IsAttacking = false;
+
+    if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+    {
+        if (Attack_Montage && AnimInstance->Montage_IsPlaying(Attack_Montage))
+            AnimInstance->Montage_Stop(0.1f, Attack_Montage);
+    }
+
+    SetSpeed();
 }
 
 void AMonsterBase::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
@@ -140,18 +152,18 @@ void AMonsterBase::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted
 
 void AMonsterBase::OnAttackFinished()
 {
-	IsAttacking = false;
+    IsAttacking = false;
 
-	if (!Controller || !CurrentTarget)
-		return;
+    if (!Controller || !CurrentTarget)
+        return;
 
-	if (!IsAttacking && Controller->IsInAttackRange())
-		PlayAttack();
-	else
-	{
-		SetSpeed();
-		Controller->RequestMoveToTarget(CurrentTarget);
-	}
+    if (Controller->IsInAttackRange())
+        PlayAttack();
+    else
+    {
+        SetSpeed();
+        Controller->RequestMoveToTarget(CurrentTarget);
+    }
 }
 
 void AMonsterBase::SetSpeed()
@@ -271,18 +283,6 @@ void AMonsterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	GetWorldTimerManager().ClearTimer(MovementStateTimer);
 	Super::EndPlay(EndPlayReason);
-}
-
-void AMonsterBase::OnRecognizeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	OnUnitBeginOverlap(OtherActor);
-}
-
-void AMonsterBase::OnRecognizeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	OnUnitEndOverlap(OtherActor);
 }
 
 AUnitBase* AMonsterBase::GetClosestOverlappingUnit() const

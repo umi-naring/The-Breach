@@ -6,15 +6,27 @@
 #include "Character/Unit/UnitAIController/AllUnitController.h"
 #include "Player/MyPlayerController.h"
 
+#include "Character/Monster/MonsterBase.h"
+
 // Sets default values
 AUnitBase::AUnitBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	// 틱 비활성화
+	PrimaryActorTick.bCanEverTick = false;
 
+	Current_HP = 0.f;
+
+	// 데칼 설정
+	SetDecal();
+}
+
+void AUnitBase::SetDecal()
+{
+	// 선택 원 데칼
 	SelectedCircleDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("SelectedCircleDecal"));
 	SelectedCircleDecal->SetupAttachment(RootComponent);
 
+	// 선택 데칼
 	SelectedDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("SelectionDecal"));
 	SelectedDecal->SetupAttachment(RootComponent);
 
@@ -36,7 +48,19 @@ void AUnitBase::BeginPlay()
 	
 	PC = Cast<AMyPlayerController>(GetWorld()->GetFirstPlayerController());
 
-	LV = 1;
+	// Controller 초기화
+	InitController();
+
+	InitAttackSphere();
+
+	// 공격 스피어 오버랩 이벤트 바인딩
+	
+}
+
+void AUnitBase::InitAttackSphere()
+{
+	if (AttackSphere)
+		AttackSphere->SetSphereRadius(GetAttackRange());
 }
 
 // Called every frame
@@ -46,28 +70,19 @@ void AUnitBase::Tick(float DeltaTime)
 
 }
 
-
-// Called to bind functionality to input
-void AUnitBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+// Controller 초기화
+void AUnitBase::InitController()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	UnitController = Cast<AAllUnitController>(GetController());
 }
 
-void AUnitBase::TakeMove(FVector SendLocation)
-{
-	AAllUnitController* UnitController = Cast<AAllUnitController>(GetController());
-	if (!UnitController)
-		return;
-	UnitController->UnitMoveToLocation(SendLocation);
-}
-
+// 선택 원 데칼 보이기/숨기기
 void AUnitBase::SelectedCircleDecalVisibility(bool DragSelected)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Name : %s, bool : %d"), *GetName(), DragSelected)
+	//UE_LOG(LogTemp, Warning, TEXT("Name : %s, bool : %d"), *GetName(), DragSelected)
 
 	if (!SelectedDecal)
-			return;
+		return;
 
 	if (DragSelected)
 		SelectedCircleDecal->SetVisibility(true);
@@ -75,17 +90,19 @@ void AUnitBase::SelectedCircleDecalVisibility(bool DragSelected)
 		SelectedCircleDecal->SetVisibility(false);
 }
 
+// 마우스 커서가 액터 위에 있을 때 호출
 void AUnitBase::NotifyActorBeginCursorOver()
 {
 	Super::NotifyActorBeginCursorOver();
 
-	if(SelectedDecal)
+	if (SelectedDecal)
 		SelectedDecalVisibility(true);
 
 	if (PC)
 		PC->OnUnitHoverBegin(this);
 }
 
+// 마우스 커서가 액터에서 벗어날 때 호출
 void AUnitBase::NotifyActorEndCursorOver()
 {
 	Super::NotifyActorEndCursorOver();
@@ -97,35 +114,76 @@ void AUnitBase::NotifyActorEndCursorOver()
 		PC->OffUnitHoverBegin(this);
 }
 
+// 선택 된 데칼 보이기/숨기기
 void AUnitBase::SelectedDecalVisibility(bool Visible)
 {
 	SelectedDecal->SetVisibility(Visible);
 }
 
+// 움직이게 하는 함수
+void AUnitBase::TakeMove(FVector SendLocation)
+{
+	if (!UnitController)
+		return;
+
+	UnitController->UnitMoveToLocation(SendLocation);
+}
+
+
+// 공격 재생
 void AUnitBase::PlayAttack()
 {
-	AttackComp->Attack(EAttackType::Normal);
+    if (!Attack_Montage)
+    {
+        IsAttacking = false;
+        return;
+    }
+
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    if (!AnimInstance)
+        return;
+
+    if (AnimInstance->Montage_IsPlaying(Attack_Montage))
+        return;
+
+    IsAttacking = true;
+
+    FOnMontageEnded EndDelegate;
+    EndDelegate.BindUObject(this, &AUnitBase::OnAttackMontageEnded);
+    AnimInstance->Montage_SetEndDelegate(EndDelegate, Attack_Montage);
+
+    AttackComp->Attack(EAttackType::Normal);
 }
 
-float AUnitBase::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCursor)
+// 공격 멈춤
+void AUnitBase::StopAttack()
 {
-	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCursor);
+    IsAttacking = false;
 
-	if (Damage < 0)
-		return 0;
-
-	Current_HP -= Damage;
-
-	if (Current_HP <= 0)
-		this->Destroy();
-
-	return Damage;
+    if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+    {
+        if (Attack_Montage && AnimInstance->Montage_IsPlaying(Attack_Montage))
+            AnimInstance->Montage_Stop(0.1f, Attack_Montage);
+    }
 }
 
-//float AUnitBase::GetStats(EStatsType StatType) const
-//{
-//	if (const float* Value = Stats.Find(StatType))
-//		return *Value;
-//
-//	return 0.f;
-//}
+// 몽타주 재생 중인지 확인
+bool AUnitBase::IsAttackMontagePlaying() const
+{
+    if (!Attack_Montage)
+        return false;
+
+    if (UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+        return AnimInstance->Montage_IsPlaying(Attack_Montage);
+
+    return false;
+}
+
+// 몽타주 종료 콜백
+void AUnitBase::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+    if (Montage != Attack_Montage)
+        return;
+
+    IsAttacking = false;
+}
